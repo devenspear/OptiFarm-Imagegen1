@@ -3,222 +3,242 @@
 {% block title %}Generate - Optimist Farm Generator{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <div>
-        <h1 class="text-3xl font-bold text-gray-800">Generate Images</h1>
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Generate Images</h1>
         <p class="text-gray-500">Create hero shots, group shots, scenes, and covers</p>
     </div>
 
+    <!-- Important Notice -->
+    <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg">
+        <div class="flex items-start">
+            <span class="text-xl mr-3">💡</span>
+            <div>
+                <p class="font-semibold">Reference Image Required</p>
+                <p class="text-sm text-amber-700 mt-1">Flux Kontext is an image-to-image model. You must provide a reference image URL for character consistency.</p>
+                <p class="text-sm text-amber-600 mt-2"><strong>Note:</strong> Google Drive links don't work directly. Use a direct image URL (e.g., from Imgur, Cloudinary, or a public web host).</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Generation Type Tabs -->
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div class="flex border-b border-gray-200">
-            <button onclick="showTab('hero')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-gray-50 transition border-b-2 border-indigo-500 text-indigo-600" data-tab="hero">
-                🐰 Hero Shot
+    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+        <div class="flex border-b border-gray-200 bg-gray-50">
+            <button onclick="showTab('hero')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-white transition border-b-2 border-indigo-500 text-indigo-600 bg-white" data-tab="hero">
+                <span class="text-lg mr-2">🐰</span> Hero Shot
             </button>
-            <button onclick="showTab('group')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-gray-50 transition border-b-2 border-transparent text-gray-500" data-tab="group">
-                👥 Group Shot
+            <button onclick="showTab('group')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-white transition border-b-2 border-transparent text-gray-500" data-tab="group">
+                <span class="text-lg mr-2">👥</span> Group Shot
             </button>
-            <button onclick="showTab('scene')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-gray-50 transition border-b-2 border-transparent text-gray-500" data-tab="scene">
-                🎬 Scene
+            <button onclick="showTab('scene')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-white transition border-b-2 border-transparent text-gray-500" data-tab="scene">
+                <span class="text-lg mr-2">🎬</span> Scene
             </button>
-            <button onclick="showTab('cover')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-gray-50 transition border-b-2 border-transparent text-gray-500" data-tab="cover">
-                📕 Cover
+            <button onclick="showTab('cover')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-white transition border-b-2 border-transparent text-gray-500" data-tab="cover">
+                <span class="text-lg mr-2">📕</span> Cover
             </button>
         </div>
 
         <!-- Hero Shot Form -->
-        <div id="hero-tab" class="tab-content p-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-2">Generate Hero Shot</h2>
-            <p class="text-gray-500 mb-6">Create a single character reference image</p>
+        <div id="hero-tab" class="tab-content p-8">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Generate Hero Shot</h2>
+                <p class="text-gray-500 mb-6">Create a single character reference image</p>
 
-            <form id="hero-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Character *</label>
-                    <select name="character_id" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                        <option value="">Select a character...</option>
-                        {% for char in characters %}
-                        <option value="{{ char.id }}">{{ char.name }} ({{ char.role }})</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                <form id="hero-form" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Character *</label>
+                        <select name="character_id" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                            <option value="">Select a character...</option>
+                            {% for char in characters %}
+                            <option value="{{ char.id }}">{{ char.name }} ({{ char.role }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Location (optional)</label>
-                    <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                        <option value="">Neutral background</option>
-                        {% for loc in locations %}
-                        <option value="{{ loc.id }}">{{ loc.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Location (optional)</label>
+                        <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                            <option value="">Neutral background</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc.id }}">{{ loc.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL (optional)</label>
-                    <input type="text" name="reference_image" placeholder="https://... or leave empty"
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                    <p class="text-xs text-gray-400 mt-1">For style consistency across generations</p>
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
+                        <input type="url" name="reference_image" required placeholder="https://example.com/image.jpg"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <p class="text-xs text-gray-500 mt-2">Direct image URL required. Google Drive/Dropbox links won't work.</p>
+                    </div>
 
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">
-                    Generate Hero Shot (~$0.04)
-                </button>
-            </form>
+                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white py-3.5 rounded-lg font-semibold transition shadow-sm">
+                        Generate Hero Shot (~$0.04)
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- Group Shot Form -->
-        <div id="group-tab" class="tab-content p-6 hidden">
-            <h2 class="text-xl font-semibold text-gray-800 mb-2">Generate Group Shot</h2>
-            <p class="text-gray-500 mb-6">Create an image with multiple characters together</p>
+        <div id="group-tab" class="tab-content p-8 hidden">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Generate Group Shot</h2>
+                <p class="text-gray-500 mb-6">Create an image with multiple characters together</p>
 
-            <form id="group-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Characters * (select multiple)</label>
-                    <select name="character_ids" multiple required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 h-40 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                        {% for char in characters %}
-                        <option value="{{ char.id }}">{{ char.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <p class="text-xs text-gray-400 mt-1">Hold Ctrl/Cmd to select multiple</p>
-                </div>
+                <form id="group-form" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Characters * (select multiple)</label>
+                        <select name="character_ids" multiple required class="w-full border border-gray-300 rounded-lg px-4 py-3 h-40 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                            {% for char in characters %}
+                            <option value="{{ char.id }}">{{ char.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="text-xs text-gray-500 mt-2">Hold Ctrl/Cmd to select multiple</p>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Location (optional)</label>
-                    <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                        <option value="">Farm setting</option>
-                        {% for loc in locations %}
-                        <option value="{{ loc.id }}">{{ loc.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Location (optional)</label>
+                        <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                            <option value="">Farm setting</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc.id }}">{{ loc.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
-                    <input type="text" name="reference_image" required placeholder="https://..."
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
+                        <input type="url" name="reference_image" required placeholder="https://example.com/image.jpg"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <p class="text-xs text-gray-500 mt-2">Direct image URL required. Google Drive/Dropbox links won't work.</p>
+                    </div>
 
-                <button type="submit" class="w-full bg-slate-700 hover:bg-slate-800 text-white py-3 rounded-lg font-medium transition">
-                    Generate Group Shot (~$0.04)
-                </button>
-            </form>
+                    <button type="submit" class="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white py-3.5 rounded-lg font-semibold transition shadow-sm">
+                        Generate Group Shot (~$0.04)
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- Scene Form -->
-        <div id="scene-tab" class="tab-content p-6 hidden">
-            <h2 class="text-xl font-semibold text-gray-800 mb-2">Generate Scene</h2>
-            <p class="text-gray-500 mb-6">Create a story scene with characters in action</p>
+        <div id="scene-tab" class="tab-content p-8 hidden">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Generate Scene</h2>
+                <p class="text-gray-500 mb-6">Create a story scene with characters in action</p>
 
-            <form id="scene-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Scene Description *</label>
-                    <textarea name="prompt" required rows="3" placeholder="e.g., Barnaby discovering a treasure map in the hay loft, excited expression, morning light..."
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                </div>
+                <form id="scene-form" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Scene Description *</label>
+                        <textarea name="prompt" required rows="3" placeholder="e.g., Barnaby discovering a treasure map in the hay loft, excited expression, morning light..."
+                                  class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Characters (select multiple)</label>
-                    <select name="character_ids" multiple class="w-full border border-gray-300 rounded-lg px-4 py-2.5 h-32 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                        {% for char in characters %}
-                        <option value="{{ char.id }}">{{ char.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Characters (select multiple)</label>
+                        <select name="character_ids" multiple class="w-full border border-gray-300 rounded-lg px-4 py-3 h-32 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                            {% for char in characters %}
+                            <option value="{{ char.id }}">{{ char.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="text-xs text-gray-500 mt-2">Hold Ctrl/Cmd to select multiple</p>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                    <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                        <option value="">Auto from prompt</option>
-                        {% for loc in locations %}
-                        <option value="{{ loc.id }}">{{ loc.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                        <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                            <option value="">Auto from prompt</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc.id }}">{{ loc.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
-                    <input type="text" name="reference_image" required placeholder="https://..."
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
+                        <input type="url" name="reference_image" required placeholder="https://example.com/image.jpg"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <p class="text-xs text-gray-500 mt-2">Direct image URL required. Google Drive/Dropbox links won't work.</p>
+                    </div>
 
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-medium transition">
-                    Generate Scene (~$0.04)
-                </button>
-            </form>
+                    <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white py-3.5 rounded-lg font-semibold transition shadow-sm">
+                        Generate Scene (~$0.04)
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- Cover Form -->
-        <div id="cover-tab" class="tab-content p-6 hidden">
-            <h2 class="text-xl font-semibold text-gray-800 mb-2">Generate Book Cover</h2>
-            <p class="text-gray-500 mb-6">Create a cover image for a book</p>
+        <div id="cover-tab" class="tab-content p-8 hidden">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Generate Book Cover</h2>
+                <p class="text-gray-500 mb-6">Create a cover image for a book</p>
 
-            <form id="cover-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Book *</label>
-                    <select name="book_id" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                        <option value="">Select a book...</option>
-                        {% for book in books %}
-                        <option value="{{ book.id }}">Book {{ book.number }}: {{ book.title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                <form id="cover-form" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Book *</label>
+                        <select name="book_id" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                            <option value="">Select a book...</option>
+                            {% for book in books %}
+                            <option value="{{ book.id }}">Book {{ book.number }}: {{ book.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
-                    <input type="text" name="reference_image" required placeholder="https://..."
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
+                        <input type="url" name="reference_image" required placeholder="https://example.com/image.jpg"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <p class="text-xs text-gray-500 mt-2">Direct image URL required. Google Drive/Dropbox links won't work.</p>
+                    </div>
 
-                <button type="submit" class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-lg font-medium transition">
-                    Generate Cover (~$0.04)
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Result Display -->
-    <div id="result-container" class="hidden">
-        <div class="bg-white rounded-lg border border-gray-200 p-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Generation Result</h2>
-            <div id="result-content"></div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white py-3.5 rounded-lg font-semibold transition shadow-sm">
+                        Generate Cover (~$0.04)
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
     <!-- Generation Status -->
     <div id="status-container" class="hidden">
-        <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 p-4 rounded-lg">
+        <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 p-5 rounded-lg">
             <div class="flex items-center">
-                <svg class="animate-spin h-5 w-5 mr-3 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin h-6 w-6 mr-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 <div>
-                    <p class="font-semibold">Generating...</p>
+                    <p class="font-semibold text-lg">Generating...</p>
                     <p class="text-sm text-indigo-600" id="status-message">Please wait, this may take 10-30 seconds</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Result Display -->
+    <div id="result-container" class="hidden">
+        <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Generation Result</h2>
+            <div id="result-content"></div>
+        </div>
+    </div>
+
     <!-- Active Style -->
-    <div class="bg-white rounded-lg border border-gray-200 p-6">
-        <div class="flex justify-between items-center">
-            <div>
-                <h3 class="font-semibold text-gray-800">Active Style</h3>
-                <p class="text-gray-500 capitalize text-sm">{{ active_style }}</p>
-            </div>
-            <div class="flex gap-2">
-                {% for style in styles %}
-                <button onclick="setStyle('{{ style.id }}')"
-                        class="px-3 py-1.5 rounded-lg text-sm font-medium transition border
-                               {% if style.id == active_style %}
-                               bg-indigo-600 text-white border-indigo-600
-                               {% else %}
-                               bg-white text-gray-600 border-gray-300 hover:border-indigo-300
-                               {% endif %}">
-                    {{ style.name }}
-                </button>
-                {% endfor %}
-            </div>
+    <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Active Style: <span class="text-indigo-600 capitalize">{{ active_style }}</span></h2>
+        <div class="flex flex-wrap gap-2">
+            {% for style in styles %}
+            <button onclick="setStyle('{{ style.id }}')"
+                    class="px-4 py-2 rounded-lg text-sm font-medium transition border
+                           {% if style.id == active_style %}
+                           bg-indigo-600 text-white border-indigo-600
+                           {% else %}
+                           bg-white text-gray-600 border-gray-300 hover:border-indigo-300 hover:text-indigo-600
+                           {% endif %}">
+                {{ style.name }}
+            </button>
+            {% endfor %}
         </div>
     </div>
 </div>
@@ -227,13 +247,14 @@
 function showTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('border-indigo-500', 'text-indigo-600');
+        btn.classList.remove('border-indigo-500', 'text-indigo-600', 'bg-white');
         btn.classList.add('border-transparent', 'text-gray-500');
     });
 
     document.getElementById(tabName + '-tab').classList.remove('hidden');
-    document.querySelector(`[data-tab="${tabName}"]`).classList.remove('border-transparent', 'text-gray-500');
-    document.querySelector(`[data-tab="${tabName}"]`).classList.add('border-indigo-500', 'text-indigo-600');
+    const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+    activeBtn.classList.remove('border-transparent', 'text-gray-500');
+    activeBtn.classList.add('border-indigo-500', 'text-indigo-600', 'bg-white');
 }
 
 async function setStyle(styleId) {
@@ -250,12 +271,48 @@ async function setStyle(styleId) {
 function showStatus(show, message = '') {
     const container = document.getElementById('status-container');
     const msgEl = document.getElementById('status-message');
+    const resultContainer = document.getElementById('result-container');
+
     if (show) {
         container.classList.remove('hidden');
+        resultContainer.classList.add('hidden');
         if (message) msgEl.textContent = message;
     } else {
         container.classList.add('hidden');
     }
+}
+
+// Validate URL - check for common problematic URLs
+function validateImageUrl(url) {
+    if (!url) {
+        return { valid: false, error: 'Reference image URL is required' };
+    }
+
+    // Check for Google Drive links
+    if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
+        return {
+            valid: false,
+            error: 'Google Drive links are not supported. Please upload your image to Imgur, Cloudinary, or another image host that provides direct URLs ending in .jpg, .png, etc.'
+        };
+    }
+
+    // Check for Dropbox links
+    if (url.includes('dropbox.com')) {
+        return {
+            valid: false,
+            error: 'Dropbox links are not directly supported. Try changing "dl=0" to "dl=1" in the URL, or use a different image host.'
+        };
+    }
+
+    // Check for OneDrive links
+    if (url.includes('onedrive.live.com') || url.includes('1drv.ms')) {
+        return {
+            valid: false,
+            error: 'OneDrive links are not supported. Please upload your image to Imgur, Cloudinary, or another image host.'
+        };
+    }
+
+    return { valid: true };
 }
 
 function showResult(success, data) {
@@ -264,22 +321,46 @@ function showResult(success, data) {
 
     container.classList.remove('hidden');
 
+    // Scroll to result
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
     if (success) {
         content.innerHTML = `
-            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-lg mb-4">
-                <p class="font-semibold">Success!</p>
-                <p class="text-sm">Image saved to: ${data.output_path}</p>
-                <p class="text-sm">Cost: $${data.cost.toFixed(2)}</p>
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-5 rounded-lg mb-6">
+                <div class="flex items-start">
+                    <span class="text-2xl mr-3">✓</span>
+                    <div>
+                        <p class="font-semibold text-lg">Success!</p>
+                        <p class="text-sm mt-1">Image saved to: <code class="bg-emerald-100 px-2 py-0.5 rounded text-xs">${data.output_path}</code></p>
+                        <p class="text-sm">Cost: $${data.cost.toFixed(2)}</p>
+                    </div>
+                </div>
             </div>
             <div class="text-center">
-                <img src="/images/${data.output_path}" alt="Generated image" class="max-w-full h-auto rounded-lg shadow-lg mx-auto border border-gray-200" style="max-height: 500px;">
+                <img src="/images/${data.output_path}" alt="Generated image" class="max-w-full h-auto rounded-lg shadow-lg mx-auto border border-gray-200" style="max-height: 600px;">
             </div>
         `;
     } else {
+        // Parse and format the error message
+        let errorMsg = data.error || 'Unknown error occurred';
+        let errorTip = '';
+
+        if (errorMsg.includes('image_load_error') || errorMsg.includes('Failed to load the image')) {
+            errorTip = 'The image URL could not be accessed. Make sure you\'re using a direct image URL (ending in .jpg, .png, etc.) from a public host like Imgur or Cloudinary.';
+        } else if (errorMsg.includes('field required') || errorMsg.includes('image_url')) {
+            errorTip = 'A reference image URL is required. Flux Kontext is an image-to-image model and needs a source image to work with.';
+        }
+
         content.innerHTML = `
-            <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg">
-                <p class="font-semibold">Error</p>
-                <p class="text-sm">${data.error}</p>
+            <div class="bg-red-50 border border-red-200 text-red-800 p-5 rounded-lg">
+                <div class="flex items-start">
+                    <span class="text-2xl mr-3">✕</span>
+                    <div>
+                        <p class="font-semibold text-lg">Generation Failed</p>
+                        <p class="text-sm mt-2">${errorMsg}</p>
+                        ${errorTip ? `<p class="text-sm mt-3 text-red-600 bg-red-100 p-3 rounded"><strong>Tip:</strong> ${errorTip}</p>` : ''}
+                    </div>
+                </div>
             </div>
         `;
     }
@@ -289,81 +370,137 @@ function showResult(success, data) {
 document.getElementById('hero-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const refImage = formData.get('reference_image');
+
+    // Validate URL before submitting
+    const validation = validateImageUrl(refImage);
+    if (!validation.valid) {
+        showResult(false, { error: validation.error });
+        return;
+    }
+
     const data = {
         character_id: formData.get('character_id'),
         location_id: formData.get('location_id') || null,
-        reference_image: formData.get('reference_image') || null
+        reference_image: refImage
     };
 
     showStatus(true, 'Generating hero shot...');
-    const response = await fetch('/api/generate/hero', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-    });
-    showStatus(false);
-    const result = await response.json();
-    showResult(result.success, result);
+    try {
+        const response = await fetch('/api/generate/hero', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        showStatus(false);
+        const result = await response.json();
+        showResult(result.success, result);
+    } catch (err) {
+        showStatus(false);
+        showResult(false, { error: 'Network error: ' + err.message });
+    }
 });
 
 document.getElementById('group-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const refImage = formData.get('reference_image');
+
+    // Validate URL before submitting
+    const validation = validateImageUrl(refImage);
+    if (!validation.valid) {
+        showResult(false, { error: validation.error });
+        return;
+    }
+
     const data = {
         character_ids: Array.from(e.target.querySelector('[name="character_ids"]').selectedOptions).map(o => o.value),
         location_id: formData.get('location_id') || null,
-        reference_image: formData.get('reference_image')
+        reference_image: refImage
     };
 
     showStatus(true, 'Generating group shot...');
-    const response = await fetch('/api/generate/group', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-    });
-    showStatus(false);
-    const result = await response.json();
-    showResult(result.success, result);
+    try {
+        const response = await fetch('/api/generate/group', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        showStatus(false);
+        const result = await response.json();
+        showResult(result.success, result);
+    } catch (err) {
+        showStatus(false);
+        showResult(false, { error: 'Network error: ' + err.message });
+    }
 });
 
 document.getElementById('scene-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const refImage = formData.get('reference_image');
+
+    // Validate URL before submitting
+    const validation = validateImageUrl(refImage);
+    if (!validation.valid) {
+        showResult(false, { error: validation.error });
+        return;
+    }
+
     const data = {
         prompt: formData.get('prompt'),
         character_ids: Array.from(e.target.querySelector('[name="character_ids"]').selectedOptions).map(o => o.value),
         location_id: formData.get('location_id') || null,
-        reference_image: formData.get('reference_image')
+        reference_image: refImage
     };
 
     showStatus(true, 'Generating scene...');
-    const response = await fetch('/api/generate/scene', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-    });
-    showStatus(false);
-    const result = await response.json();
-    showResult(result.success, result);
+    try {
+        const response = await fetch('/api/generate/scene', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        showStatus(false);
+        const result = await response.json();
+        showResult(result.success, result);
+    } catch (err) {
+        showStatus(false);
+        showResult(false, { error: 'Network error: ' + err.message });
+    }
 });
 
 document.getElementById('cover-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const refImage = formData.get('reference_image');
+
+    // Validate URL before submitting
+    const validation = validateImageUrl(refImage);
+    if (!validation.valid) {
+        showResult(false, { error: validation.error });
+        return;
+    }
+
     const data = {
         book_id: formData.get('book_id'),
-        reference_image: formData.get('reference_image')
+        reference_image: refImage
     };
 
     showStatus(true, 'Generating cover...');
-    const response = await fetch('/api/generate/cover', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-    });
-    showStatus(false);
-    const result = await response.json();
-    showResult(result.success, result);
+    try {
+        const response = await fetch('/api/generate/cover', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        showStatus(false);
+        const result = await response.json();
+        showResult(result.success, result);
+    } catch (err) {
+        showStatus(false);
+        showResult(false, { error: 'Network error: ' + err.message });
+    }
 });
 
 const urlParams = new URLSearchParams(window.location.search);

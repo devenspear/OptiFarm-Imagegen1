@@ -211,11 +211,29 @@ def api_set_style():
         return jsonify({'success': True, 'active_style': style_id})
     return jsonify({'success': False, 'error': 'Style not found'}), 400
 
+def validate_image_url(url):
+    """Validate that the URL is likely to work with fal.ai."""
+    if not url:
+        return False, "Reference image URL is required. Flux Kontext is an image-to-image model."
+
+    # Check for common problematic URLs
+    if 'drive.google.com' in url or 'docs.google.com' in url:
+        return False, "Google Drive links are not supported. Please use a direct image URL from Imgur, Cloudinary, or another image host."
+
+    if 'dropbox.com' in url and 'dl=0' in url:
+        return False, "Dropbox links need 'dl=1' instead of 'dl=0' to work. Or use a different image host."
+
+    if 'onedrive.live.com' in url or '1drv.ms' in url:
+        return False, "OneDrive links are not supported. Please use a direct image URL."
+
+    return True, None
+
+
 @app.route('/api/generate/hero', methods=['POST'])
 def api_generate_hero():
     """Generate a hero shot."""
     if not os.environ.get("FAL_KEY"):
-        return jsonify({'success': False, 'error': 'FAL_KEY not set'}), 400
+        return jsonify({'success': False, 'error': 'FAL_KEY not set. Please configure your API key.'}), 400
 
     data = request.json
     character_id = data.get('character_id')
@@ -223,7 +241,12 @@ def api_generate_hero():
     location_id = data.get('location_id')
 
     if not character_id:
-        return jsonify({'success': False, 'error': 'character_id required'}), 400
+        return jsonify({'success': False, 'error': 'Please select a character'}), 400
+
+    # Validate reference image URL
+    valid, error = validate_image_url(reference_image)
+    if not valid:
+        return jsonify({'success': False, 'error': error}), 400
 
     result = generator.generate_hero_shot(
         character_id=character_id,
@@ -242,7 +265,7 @@ def api_generate_hero():
 def api_generate_group():
     """Generate a group shot."""
     if not os.environ.get("FAL_KEY"):
-        return jsonify({'success': False, 'error': 'FAL_KEY not set'}), 400
+        return jsonify({'success': False, 'error': 'FAL_KEY not set. Please configure your API key.'}), 400
 
     data = request.json
     character_ids = data.get('character_ids', [])
@@ -250,7 +273,12 @@ def api_generate_group():
     location_id = data.get('location_id')
 
     if not character_ids:
-        return jsonify({'success': False, 'error': 'character_ids required'}), 400
+        return jsonify({'success': False, 'error': 'Please select at least one character'}), 400
+
+    # Validate reference image URL
+    valid, error = validate_image_url(reference_image)
+    if not valid:
+        return jsonify({'success': False, 'error': error}), 400
 
     result = generator.generate_group_shot(
         character_ids=character_ids,
@@ -269,7 +297,7 @@ def api_generate_group():
 def api_generate_scene():
     """Generate a scene."""
     if not os.environ.get("FAL_KEY"):
-        return jsonify({'success': False, 'error': 'FAL_KEY not set'}), 400
+        return jsonify({'success': False, 'error': 'FAL_KEY not set. Please configure your API key.'}), 400
 
     data = request.json
     scene_prompt = data.get('prompt')
@@ -278,9 +306,12 @@ def api_generate_scene():
     location_id = data.get('location_id')
 
     if not scene_prompt:
-        return jsonify({'success': False, 'error': 'prompt required'}), 400
-    if not reference_image:
-        return jsonify({'success': False, 'error': 'reference_image required'}), 400
+        return jsonify({'success': False, 'error': 'Please enter a scene description'}), 400
+
+    # Validate reference image URL
+    valid, error = validate_image_url(reference_image)
+    if not valid:
+        return jsonify({'success': False, 'error': error}), 400
 
     result = generator.generate_scene(
         scene_prompt=scene_prompt,
@@ -300,16 +331,19 @@ def api_generate_scene():
 def api_generate_cover():
     """Generate a book cover."""
     if not os.environ.get("FAL_KEY"):
-        return jsonify({'success': False, 'error': 'FAL_KEY not set'}), 400
+        return jsonify({'success': False, 'error': 'FAL_KEY not set. Please configure your API key.'}), 400
 
     data = request.json
     book_id = data.get('book_id')
     reference_image = data.get('reference_image')
 
     if not book_id:
-        return jsonify({'success': False, 'error': 'book_id required'}), 400
-    if not reference_image:
-        return jsonify({'success': False, 'error': 'reference_image required'}), 400
+        return jsonify({'success': False, 'error': 'Please select a book'}), 400
+
+    # Validate reference image URL
+    valid, error = validate_image_url(reference_image)
+    if not valid:
+        return jsonify({'success': False, 'error': error}), 400
 
     result = generator.generate_cover(
         book_id=book_id,
