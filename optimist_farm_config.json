@@ -1,0 +1,105 @@
+{
+  "project_name": "Optimist Farm Storybook Series",
+  "style_description": "3D animated children's storybook illustration, Pixar-quality rendering, soft fur textures, expressive cartoon eyes, warm natural lighting, shallow depth of field, whimsical farm setting",
+  
+  "characters": {
+    "barnaby_bunny": {
+      "name": "Barnaby Bunny",
+      "description": "Gray and white bunny wearing blue denim overalls with plaid shirt underneath, large expressive dark eyes, long upright ears with pink interior",
+      "reference_image": "./characters/barnaby_bunny.jpg",
+      "personality": "Curious, adventurous, natural leader"
+    },
+    "greta_goat": {
+      "name": "Greta Goat",
+      "description": "Tan colored goat with spiral horns, white beard, playful expression, walking on hind legs",
+      "reference_image": "./characters/greta_goat.jpg",
+      "personality": "Mischievous, loves to eat everything"
+    },
+    "clara_cow": {
+      "name": "Clara Cow",
+      "description": "Black and white spotted Holstein calf, pink nose, small horns, cheerful dancing expression",
+      "reference_image": "./characters/clara_cow.jpg",
+      "personality": "Happy, optimistic, loves to dance"
+    },
+    "penny_pig": {
+      "name": "Penny Pig",
+      "description": "Pink pig with curly tail, wearing a sunflower behind one ear, round snout",
+      "reference_image": "./characters/penny_pig.jpg",
+      "personality": "Sweet, loves mud puddles and flowers"
+    },
+    "henry_horse": {
+      "name": "Henry Horse",
+      "description": "Brown horse with white blaze on face, flowing mane, strong build",
+      "reference_image": "./characters/henry_horse.jpg",
+      "personality": "Strong, reliable, gives rides to friends"
+    },
+    "daisy_duck": {
+      "name": "Daisy Duck",
+      "description": "White duck with orange bill and feet, fluffy feathers, waddles adorably",
+      "reference_image": "./characters/daisy_duck.jpg",
+      "personality": "Talkative, loves swimming in the pond"
+    },
+    "roger_rooster": {
+      "name": "Roger Rooster",
+      "description": "Colorful rooster with red comb, green and gold tail feathers, proud stance",
+      "reference_image": "./characters/roger_rooster.jpg",
+      "personality": "Early riser, announces each morning"
+    },
+    "sheila_sheep": {
+      "name": "Sheila Sheep",
+      "description": "Fluffy white sheep with black face and legs, soft wool, gentle eyes",
+      "reference_image": "./characters/sheila_sheep.jpg",
+      "personality": "Gentle, gives the softest hugs"
+    }
+  },
+  
+  "farm_locations": [
+    "The red barn with weathered wood siding",
+    "The vegetable garden with rows of carrots and lettuce", 
+    "The apple orchard with trees full of ripe fruit",
+    "The duck pond with lily pads and cattails",
+    "The hay loft filled with golden straw bales",
+    "The farmhouse kitchen with a warm hearth",
+    "The meadow with wildflowers and butterflies",
+    "The old wooden fence overlooking rolling hills",
+    "The windmill on the hill at sunset",
+    "The chicken coop with nesting boxes"
+  ],
+  
+  "books": {
+    "book_01_treasure_map": {
+      "title": "The Treasure Map Adventure",
+      "main_characters": ["barnaby_bunny", "greta_goat", "clara_cow"],
+      "scenes": [
+        {"page": 1, "prompt": "The three friends waking up at sunrise in the barn"},
+        {"page": 2, "prompt": "Barnaby discovering a dusty old treasure map in the hay"},
+        {"page": 3, "prompt": "Friends gathered around a table studying the map"},
+        {"page": 4, "prompt": "Walking through a flower meadow following the map"},
+        {"page": 5, "prompt": "Crossing a wooden bridge over a brook"},
+        {"page": 6, "prompt": "Finding the treasure chest under a big oak tree"},
+        {"page": 7, "prompt": "Opening the chest to find friendship tokens inside"},
+        {"page": 8, "prompt": "Walking home at sunset, arms around each other"}
+      ]
+    },
+    "book_02_rainy_day": {
+      "title": "The Rainy Day Surprise",
+      "main_characters": ["penny_pig", "daisy_duck", "sheila_sheep"],
+      "scenes": [
+        {"page": 1, "prompt": "Dark clouds gathering over the farm"},
+        {"page": 2, "prompt": "Rain starting to fall, animals running to the barn"},
+        {"page": 3, "prompt": "Friends huddled in the barn watching rain through the door"},
+        {"page": 4, "prompt": "Daisy Duck jumping happily in mud puddles"},
+        {"page": 5, "prompt": "All friends playing in the rain together"},
+        {"page": 6, "prompt": "A beautiful rainbow appearing as rain stops"},
+        {"page": 7, "prompt": "Friends drying off in the warm barn"},
+        {"page": 8, "prompt": "Sunset through clearing clouds, puddles reflecting sky"}
+      ]
+    }
+  },
+  
+  "output_settings": {
+    "base_output_dir": "./generated_illustrations",
+    "image_format": "jpeg",
+    "naming_convention": "{book_id}_{page:02d}_{scene_name}"
+  }
+}

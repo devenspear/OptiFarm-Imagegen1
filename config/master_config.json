@@ -1,0 +1,746 @@
+{
+  "project": {
+    "name": "Optimist Farm Storybook Series",
+    "version": "2.0",
+    "description": "AI-powered children's storybook illustration generator based on Writing Bible v2.4"
+  },
+  "api": {
+    "provider": "fal-ai",
+    "model": "fal-ai/flux-pro/kontext",
+    "defaults": {
+      "guidance_scale": 3.5,
+      "num_inference_steps": 28,
+      "output_format": "jpeg"
+    },
+    "cost_per_image": 0.04
+  },
+  "image_settings": {
+    "aspect_ratios": {
+      "square": "1:1",
+      "landscape": "3:2",
+      "portrait": "2:3",
+      "wide": "16:9"
+    },
+    "default_aspect_ratio": "square",
+    "hero_shot_ratio": "square",
+    "scene_ratio": "landscape",
+    "cover_ratio": "portrait",
+    "group_shot_ratio": "landscape"
+  },
+  "paths": {
+    "reference_images": "./reference_images",
+    "character_references": "./reference_images/characters",
+    "group_shots": "./reference_images/group_shots",
+    "style_references": "./reference_images/style_references",
+    "output": "./output",
+    "books_output": "./output/books",
+    "covers_output": "./output/covers"
+  },
+  "style_presets": {
+    "default": {
+      "name": "Saturated Rainbow (Writing Bible v2.4)",
+      "prompt": "Saturated, rainbow-forward color palette, bright optimistic feel, high contrast for accessibility, 3D animated children's storybook illustration, expressive cartoon eyes, soft lighting, whimsical farm setting, professional children's book quality, digital-first design"
+    },
+    "pixar": {
+      "name": "Pixar-Quality 3D",
+      "prompt": "Pixar-quality 3D animated rendering, soft fur textures, expressive cartoon eyes, warm natural lighting, shallow depth of field, whimsical farm setting, high detail, professional children's book quality"
+    },
+    "watercolor": {
+      "name": "Soft Watercolor",
+      "prompt": "Gentle watercolor illustration style, soft edges, muted earthy tones, nostalgic and warm, hand-painted texture, children's storybook quality, Beatrix Potter inspired"
+    },
+    "cartoon": {
+      "name": "Vibrant Cartoon",
+      "prompt": "Cartoon style, bright sunny colors, clean lines, expressive characters, children's animation quality, vibrant and cheerful, consistent with established character designs"
+    }
+  },
+  "active_style": "default",
+  "characters": {
+    "ollie_owl": {
+      "name": "Ollie the Owl",
+      "role": "mentor",
+      "description": "Wise owl with bright round spectacles perched on his beak, soft brown and cream feathers, large knowing eyes behind glasses, calm and gentle expression, slightly ruffled feathers suggesting wisdom and age",
+      "personality": "Wise mentor figure, delivers guidance with gentle wisdom, his appearance is accompanied by a soft chime",
+      "visual_cues": "bright spectacles, soft brown feathers, wise gentle eyes",
+      "virtues": [
+        "wisdom",
+        "guidance"
+      ],
+      "reference_image": "./reference_images/characters/ollie_owl/hero.jpg",
+      "appears_with_chime": true
+    },
+    "barnaby_bunny": {
+      "name": "Barnaby Bunny",
+      "role": "core",
+      "description": "Gray and white bunny wearing blue denim overalls with a plaid shirt underneath, large expressive dark eyes, long upright ears with pink interior, soft fluffy fur, friendly and curious expression",
+      "personality": "Curious, adventurous, natural leader, grateful heart",
+      "visual_cues": "blue denim overalls, plaid shirt, gray and white fur, pink inner ears",
+      "virtues": [
+        "gratitude",
+        "generosity"
+      ],
+      "locations": [
+        "garden",
+        "meadow"
+      ],
+      "reference_image": "./reference_images/characters/barnaby_bunny/hero.jpg"
+    },
+    "pearl_pig": {
+      "name": "Pearl the Pig",
+      "role": "core",
+      "description": "Pink pig with a curly tail, wearing a sunflower tucked behind one ear, round snout with a cheerful smile, bright expressive eyes, clean and well-groomed appearance",
+      "personality": "Determined, hardworking, loves trying new things, never gives up",
+      "visual_cues": "pink, sunflower behind ear, curly tail, cheerful smile",
+      "virtues": [
+        "perseverance",
+        "teamwork"
+      ],
+      "locations": [
+        "barn",
+        "windmill",
+        "breezy_meadow"
+      ],
+      "reference_image": "./reference_images/characters/pearl_pig/hero.jpg"
+    },
+    "gus_goat": {
+      "name": "Gus the Goat",
+      "role": "core",
+      "description": "Tan colored goat with small spiral horns, white fluffy beard, playful mischievous expression, walking upright on hind legs, expressive eyes with a twinkle of fun",
+      "personality": "Mischievous but kind, learning self-control, enthusiastic, loves to help with big tasks",
+      "visual_cues": "tan fur, spiral horns, white beard, mischievous twinkle",
+      "virtues": [
+        "self-control",
+        "teamwork",
+        "resilience"
+      ],
+      "locations": [
+        "barn",
+        "garden"
+      ],
+      "reference_image": "./reference_images/characters/gus_goat/hero.jpg"
+    },
+    "christy_cow": {
+      "name": "Christy the Cow",
+      "role": "core",
+      "description": "Black and white spotted Holstein calf, pink nose, small budding horns, warm brown eyes, cheerful dancing expression, gentle and nurturing appearance",
+      "personality": "Happy, optimistic, loves to dance, kind and forgiving",
+      "visual_cues": "black and white spots, pink nose, warm brown eyes, gentle smile",
+      "virtues": [
+        "kindness",
+        "forgiveness"
+      ],
+      "locations": [
+        "meadow_of_kindness",
+        "meadow"
+      ],
+      "reference_image": "./reference_images/characters/christy_cow/hero.jpg"
+    },
+    "lillie_lamb": {
+      "name": "Lillie the Lamb",
+      "role": "core",
+      "description": "Fluffy white lamb with a soft woolly coat, black face and legs, gentle doe eyes, small pink nose, wearing a tiny bell on a ribbon around neck, serene and peaceful expression",
+      "personality": "Gentle, patient, gives the softest hugs, compassionate soul",
+      "visual_cues": "white wool, black face and legs, bell on ribbon, gentle eyes",
+      "virtues": [
+        "patience",
+        "compassion"
+      ],
+      "locations": [
+        "seed_trays",
+        "meadow",
+        "sun_patch"
+      ],
+      "reference_image": "./reference_images/characters/lillie_lamb/hero.jpg"
+    },
+    "dugan_dog": {
+      "name": "Dugan the Dog",
+      "role": "core",
+      "description": "Friendly farm dog with golden-brown fur, floppy ears, loyal trusting eyes, wagging tail, red bandana around neck, alert but calm posture",
+      "personality": "Loyal, trustworthy, calm presence, teaches respect through gentle approach",
+      "visual_cues": "golden-brown fur, floppy ears, red bandana, wagging tail",
+      "virtues": [
+        "respect",
+        "trust"
+      ],
+      "locations": [
+        "meadow_edge",
+        "quiet_space"
+      ],
+      "reference_image": "./reference_images/characters/dugan_dog/hero.jpg"
+    },
+    "clementine_chick": {
+      "name": "Clementine the Chick",
+      "role": "core",
+      "description": "Fluffy yellow chick with bright orange beak and feet, tiny wings, big curious eyes, energetic and bouncy appearance, small red comb beginning to show",
+      "personality": "Honest, straightforward, energetic, always tells the truth",
+      "visual_cues": "fluffy yellow, orange beak and feet, tiny wings, curious eyes",
+      "virtues": [
+        "honesty"
+      ],
+      "locations": [
+        "chicken_coop",
+        "barn"
+      ],
+      "reference_image": "./reference_images/characters/clementine_chick/hero.jpg"
+    },
+    "delilah_duck": {
+      "name": "Delilah the Duck",
+      "role": "core",
+      "description": "White duck with bright orange bill and webbed feet, smooth white feathers, kind motherly eyes, graceful waddle, slightly larger than Dixie",
+      "personality": "Responsible, generous coach, teaches younger ones, dependable",
+      "visual_cues": "white feathers, orange bill and feet, kind motherly expression",
+      "virtues": [
+        "responsibility",
+        "generosity"
+      ],
+      "locations": [
+        "pond",
+        "barn_pegs"
+      ],
+      "reference_image": "./reference_images/characters/delilah_duck/hero.jpg"
+    },
+    "dixie_duckling": {
+      "name": "Dixie the Duckling",
+      "role": "friend",
+      "description": "Small fluffy yellow duckling with tiny orange bill, soft downy feathers, big brave eyes despite small size, often near water or lily pads",
+      "personality": "Brave despite being small, learning courage, takes on new challenges",
+      "visual_cues": "small yellow, fluffy down, tiny orange bill, brave expression",
+      "virtues": [
+        "courage",
+        "kindness"
+      ],
+      "locations": [
+        "pond",
+        "lily_pad"
+      ],
+      "reference_image": "./reference_images/characters/dixie_duckling/hero.jpg"
+    },
+    "lil_dax_donkey": {
+      "name": "Lil Dax the Donkey",
+      "role": "friend",
+      "description": "Young gray donkey with long ears, wearing a small brown derby hat, sturdy build for his age, helpful eager expression, soft fuzzy coat",
+      "personality": "Helpful, hardworking, eager to assist, never complains about heavy loads",
+      "visual_cues": "gray fur, long ears, brown derby hat, sturdy build",
+      "virtues": [
+        "helpfulness",
+        "perseverance",
+        "responsibility"
+      ],
+      "locations": [
+        "barn",
+        "feed_bucket"
+      ],
+      "reference_image": "./reference_images/characters/lil_dax_donkey/hero.jpg"
+    },
+    "posie_piglet": {
+      "name": "Posie the Piglet",
+      "role": "friend",
+      "description": "Small pink piglet, younger and smaller than Pearl, muddy but happy, bright curious eyes, tiny curly tail, loves to play",
+      "personality": "Playful, friendly, loves mud puddles, makes friends easily",
+      "visual_cues": "small pink, sometimes muddy, tiny curly tail, playful expression",
+      "virtues": [
+        "friendship"
+      ],
+      "locations": [
+        "garden",
+        "mud_puddle"
+      ],
+      "reference_image": "./reference_images/characters/posie_piglet/hero.jpg"
+    },
+    "snip_squirrel": {
+      "name": "Snip the Squirrel",
+      "role": "friend",
+      "description": "Reddish-brown squirrel with bushy tail, quick movements, often holding an acorn, bright alert eyes, fluffy ears with small tufts",
+      "personality": "Quick, generous with sharing, values friendship, loves collecting but shares freely",
+      "visual_cues": "reddish-brown, bushy tail, often with acorn, alert eyes",
+      "virtues": [
+        "sharing",
+        "friendship"
+      ],
+      "locations": [
+        "oak_tree",
+        "meadow"
+      ],
+      "reference_image": "./reference_images/characters/snip_squirrel/hero.jpg"
+    },
+    "millie_mouse": {
+      "name": "Millie the Mouse",
+      "role": "friend",
+      "description": "Tiny gray mouse with large round ears, long thin tail, pink nose, wearing a tiny apron, small but observant, gentle demeanor",
+      "personality": "Empathetic, notices when others are sad, honest and caring",
+      "visual_cues": "tiny gray, large round ears, pink nose, tiny apron",
+      "virtues": [
+        "empathy",
+        "honesty"
+      ],
+      "locations": [
+        "meadow_of_kindness",
+        "barn"
+      ],
+      "reference_image": "./reference_images/characters/millie_mouse/hero.jpg"
+    },
+    "hollis_horse": {
+      "name": "Hollis the Horse",
+      "role": "friend",
+      "description": "Strong brown horse with white blaze on face, flowing dark mane and tail, kind wise eyes, muscular but gentle build, calm steady presence",
+      "personality": "Strong, reliable, optimistic, sees the good in every situation",
+      "visual_cues": "brown coat, white face blaze, flowing mane, kind eyes",
+      "virtues": [
+        "optimism"
+      ],
+      "locations": [
+        "garden",
+        "meadow",
+        "barn"
+      ],
+      "reference_image": "./reference_images/characters/hollis_horse/hero.jpg"
+    },
+    "ralphie_rooster": {
+      "name": "Ralphie the Rooster",
+      "role": "friend",
+      "description": "Colorful rooster with bright red comb and wattle, iridescent green and gold tail feathers, proud upright stance, cheerful wake-up expression",
+      "personality": "Early riser, fair and just, announces each morning, ensures everyone gets equal share",
+      "visual_cues": "red comb, green and gold tail feathers, proud stance",
+      "virtues": [
+        "fairness"
+      ],
+      "locations": [
+        "barn",
+        "chicken_coop"
+      ],
+      "reference_image": "./reference_images/characters/ralphie_rooster/hero.jpg"
+    },
+    "pippin_snail": {
+      "name": "Pippin the Snail",
+      "role": "special",
+      "description": "Small cheerful snail with a colorful spiral shell in warm rainbow colors, tiny antenna with dots on tips, friendly smile, leaves a subtle sparkly trail",
+      "personality": "Hidden friend on every page, cheerful when found, rewards seekers with a smile",
+      "visual_cues": "colorful spiral shell, tiny antenna, friendly smile, sparkly trail",
+      "virtues": [
+        "seek-and-find"
+      ],
+      "special_function": "Appears visually hidden on every page as a seek-and-find element. Tap triggers cheerful 'Pippin smile' sound.",
+      "reference_image": "./reference_images/characters/pippin_snail/hero.jpg"
+    }
+  },
+  "locations": {
+    "garden": {
+      "name": "The Garden",
+      "description": "Lush vegetable garden with rows of carrots, lettuce, and tomatoes, rich dark soil, morning dew on leaves, warm sunlight, wooden fence border",
+      "associated_virtues": [
+        "gratitude",
+        "patience"
+      ],
+      "associated_characters": [
+        "barnaby_bunny",
+        "posie_piglet"
+      ]
+    },
+    "barn": {
+      "name": "The Red Barn",
+      "description": "Classic red barn with weathered wood siding, large doors, hay loft visible, tools on neat pegboard, warm golden light inside, cozy and safe",
+      "associated_virtues": [
+        "responsibility",
+        "resilience"
+      ],
+      "associated_characters": [
+        "pearl_pig",
+        "gus_goat",
+        "lil_dax_donkey"
+      ]
+    },
+    "windmill": {
+      "name": "The Windmill / Breezy Meadow",
+      "description": "Old wooden windmill on a gentle hill, ribbons and kites flying in the breeze, tall grass swaying, blue sky with fluffy clouds",
+      "associated_virtues": [
+        "perseverance",
+        "teamwork"
+      ],
+      "associated_characters": [
+        "pearl_pig",
+        "lil_dax_donkey"
+      ]
+    },
+    "meadow_of_kindness": {
+      "name": "Meadow of Kindness",
+      "description": "Open meadow filled with wildflowers and soft grass, butterflies floating, warm sunshine, perfect for mood-turn scenes and reconciliation",
+      "associated_virtues": [
+        "kindness",
+        "forgiveness",
+        "empathy"
+      ],
+      "associated_characters": [
+        "christy_cow",
+        "millie_mouse"
+      ]
+    },
+    "meadow_edge": {
+      "name": "Meadow Edge / Quiet Space",
+      "description": "Peaceful edge of the meadow near the forest, quiet and serene, soft blanket on grass, perfect for calm reflection and trust-building",
+      "associated_virtues": [
+        "respect",
+        "trust"
+      ],
+      "associated_characters": [
+        "dugan_dog"
+      ]
+    },
+    "pond": {
+      "name": "The Duck Pond",
+      "description": "Calm pond with lily pads and cattails, reflections on water, gentle ripples, safe shallow edges, willow tree nearby",
+      "associated_virtues": [
+        "courage",
+        "responsibility"
+      ],
+      "associated_characters": [
+        "delilah_duck",
+        "dixie_duckling"
+      ]
+    },
+    "oak_tree": {
+      "name": "The Great Oak / Starry Night",
+      "description": "Magnificent old oak tree with sprawling branches, perfect for climbing, acorns scattered below, night scenes show stars through leaves",
+      "associated_virtues": [
+        "sharing",
+        "curiosity",
+        "reflection"
+      ],
+      "associated_characters": [
+        "snip_squirrel",
+        "ollie_owl"
+      ]
+    },
+    "chicken_coop": {
+      "name": "The Chicken Coop",
+      "description": "Cozy chicken coop with nesting boxes, straw bedding, wooden perches, tally sticks for counting, warm morning light",
+      "associated_virtues": [
+        "honesty"
+      ],
+      "associated_characters": [
+        "clementine_chick",
+        "ralphie_rooster"
+      ]
+    },
+    "farmhouse_kitchen": {
+      "name": "Farmhouse Kitchen",
+      "description": "Warm farmhouse kitchen with hearth, wooden table, copper pots, fresh baked goods smell, cozy and inviting",
+      "associated_virtues": [
+        "generosity",
+        "sharing"
+      ],
+      "associated_characters": []
+    },
+    "seed_trays": {
+      "name": "Seed Trays / Sun Patch",
+      "description": "Wooden seed trays in a sunny spot, small sprouts emerging, gentle warmth, patience visible in slow growth",
+      "associated_virtues": [
+        "patience"
+      ],
+      "associated_characters": [
+        "lillie_lamb",
+        "barnaby_bunny"
+      ]
+    }
+  },
+  "books": {
+    "book_01_courage": {
+      "title": "One Brave Step",
+      "book_number": 1,
+      "virtue": "courage",
+      "featured_character": "dixie_duckling",
+      "supporting_characters": [
+        "delilah_duck",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "pond",
+      "prop": "big lily pad",
+      "mantra": "Brave is one step.",
+      "micro_ritual": {
+        "name": "One Brave Step",
+        "description": "Try one new thing today"
+      },
+      "scenes": []
+    },
+    "book_02_empathy": {
+      "title": "I See You, I'm Here",
+      "book_number": 2,
+      "virtue": "empathy",
+      "featured_character": "millie_mouse",
+      "supporting_characters": [
+        "lillie_lamb",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "meadow_of_kindness",
+      "prop": "Lillie's lost bell",
+      "mantra": "I see you. I'm here.",
+      "micro_ritual": {
+        "name": "A Kind Squeeze",
+        "description": "Give a gentle hand squeeze to someone"
+      },
+      "scenes": []
+    },
+    "book_03_self_control": {
+      "title": "Wait, Breathe, Then Go",
+      "book_number": 3,
+      "virtue": "self-control",
+      "featured_character": "gus_goat",
+      "supporting_characters": [
+        "pearl_pig",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "barn",
+      "prop": "wobbly block tower",
+      "mantra": "Wait, breathe, then go.",
+      "micro_ritual": {
+        "name": "Hands on Heart, Count to Three",
+        "description": "Place hands on heart and count to three before acting"
+      },
+      "scenes": []
+    },
+    "book_04_friendship_snip": {
+      "title": "Better With Two",
+      "book_number": 4,
+      "virtue": "friendship",
+      "featured_character": "snip_squirrel",
+      "supporting_characters": [
+        "barnaby_bunny",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "oak_tree",
+      "prop": "one perfect acorn",
+      "mantra": "It's better with two.",
+      "micro_ritual": {
+        "name": "Find a Friend to Share",
+        "description": "Find something to share with a friend today"
+      },
+      "scenes": []
+    },
+    "book_05_friendship_posie": {
+      "title": "Friends Make Fun",
+      "book_number": 5,
+      "virtue": "friendship",
+      "featured_character": "posie_piglet",
+      "supporting_characters": [
+        "pearl_pig",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "garden",
+      "prop": "perfect mud puddle",
+      "mantra": "Friends make fun.",
+      "micro_ritual": {
+        "name": "Invite One Friend In",
+        "description": "Invite a friend to join your activity"
+      },
+      "scenes": []
+    },
+    "book_06_helpfulness": {
+      "title": "Helping Hands Are Happy Hands",
+      "book_number": 6,
+      "virtue": "helpfulness",
+      "featured_character": "lil_dax_donkey",
+      "supporting_characters": [
+        "delilah_duck",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "barn",
+      "prop": "heavy feed bucket",
+      "mantra": "Helping hands are happy hands.",
+      "micro_ritual": {
+        "name": "Ask How Can I Help",
+        "description": "Ask someone 'How can I help?' today"
+      },
+      "scenes": []
+    },
+    "book_07_teamwork_pearl": {
+      "title": "We Pull Together",
+      "book_number": 7,
+      "virtue": "teamwork",
+      "featured_character": "pearl_pig",
+      "supporting_characters": [
+        "gus_goat",
+        "lil_dax_donkey",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "windmill",
+      "prop": "tangled kite",
+      "mantra": "We pull together.",
+      "micro_ritual": {
+        "name": "One Two Three Pull",
+        "description": "Work together counting 'One, two, three... PULL!'"
+      },
+      "scenes": []
+    },
+    "book_08_teamwork_gus": {
+      "title": "Together Is Stronger",
+      "book_number": 8,
+      "virtue": "teamwork",
+      "featured_character": "gus_goat",
+      "supporting_characters": [
+        "pearl_pig",
+        "hollis_horse",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "garden",
+      "prop": "giant pumpkin",
+      "mantra": "Together is stronger.",
+      "micro_ritual": {
+        "name": "One Pushes One Pulls",
+        "description": "Work with a partner - one pushes, one pulls"
+      },
+      "scenes": []
+    },
+    "book_09_forgiveness": {
+      "title": "Let's Start New",
+      "book_number": 9,
+      "virtue": "forgiveness",
+      "featured_character": "christy_cow",
+      "supporting_characters": [
+        "barnaby_bunny",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "meadow_of_kindness",
+      "prop": "spilled berry basket",
+      "mantra": "It's okay. Let's start new.",
+      "micro_ritual": {
+        "name": "A Mistake Hug",
+        "description": "Give a forgiving hug after a mistake"
+      },
+      "scenes": []
+    },
+    "book_10_optimism": {
+      "title": "Look for the Good",
+      "book_number": 10,
+      "virtue": "optimism",
+      "featured_character": "hollis_horse",
+      "supporting_characters": [
+        "barnaby_bunny",
+        "christy_cow",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "garden",
+      "prop": "raincloud clearing",
+      "mantra": "Look for the good.",
+      "micro_ritual": {
+        "name": "Find the Good",
+        "description": "Name one good thing about a hard situation"
+      },
+      "scenes": []
+    },
+    "book_11_fairness": {
+      "title": "Fair Is Share",
+      "book_number": 11,
+      "virtue": "fairness",
+      "featured_character": "ralphie_rooster",
+      "supporting_characters": [
+        "clementine_chick",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "barn",
+      "prop": "pile of corn",
+      "mantra": "Fair is share.",
+      "micro_ritual": {
+        "name": "One Scoop Each",
+        "description": "Divide treats equally - one scoop for each person"
+      },
+      "scenes": []
+    },
+    "book_12_trust": {
+      "title": "I Know You're There",
+      "book_number": 12,
+      "virtue": "trust",
+      "featured_character": "dugan_dog",
+      "supporting_characters": [
+        "lillie_lamb",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "meadow_edge",
+      "prop": "stay game",
+      "mantra": "I know you're there.",
+      "micro_ritual": {
+        "name": "Close Eyes and Listen",
+        "description": "Close your eyes and trust someone to guide you by sound"
+      },
+      "scenes": []
+    },
+    "book_13_compassion": {
+      "title": "Be Gentle, Be Kind",
+      "book_number": 13,
+      "virtue": "compassion",
+      "featured_character": "lillie_lamb",
+      "supporting_characters": [
+        "dugan_dog",
+        "ollie_owl",
+        "pippin_snail"
+      ],
+      "primary_location": "meadow",
+      "prop": "little bird stuck",
+      "mantra": "Be gentle. Be kind.",
+      "micro_ritual": {
+        "name": "Soft Voice Gentle Hands",
+        "description": "Use a soft voice and gentle hands with someone small"
+      },
+      "scenes": []
+    }
+  },
+  "story_engine": {
+    "description": "Six-Beat Arc structure for all stories (20-24 screens)",
+    "beats": {
+      "setup": {
+        "screens": "1-2",
+        "description": "Friend + Place + Aim (2 short rhythmic lines, one sense word)"
+      },
+      "problem": {
+        "screens": "3-6",
+        "description": "One wobble + sound word (sensory + onomatopoeia)"
+      },
+      "mentor_light": {
+        "screens": "7-10",
+        "description": "Ollie (or peer) whispers <=18-word line; soft chime; tiny visual glow"
+      },
+      "practice_growth": {
+        "screens": "11-16",
+        "description": "Two mini-tries; one visible tweak each; gentle self-talk"
+      },
+      "climax_win": {
+        "screens": "16-18",
+        "description": "Small, vivid success (carrots pop; kite lifts; tower holds)"
+      },
+      "resolution": {
+        "screens": "18-24",
+        "description": "Meadow cheer or starry quiet + Final Affirmation question inviting action today"
+      }
+    },
+    "rules": {
+      "mentor_line_max_words": 18,
+      "syllables_per_line": "8-12",
+      "always_happy_ending": true,
+      "pippin_on_every_page": true,
+      "tap_cues_per_act": "1-2"
+    }
+  },
+  "prompt_templates": {
+    "hero_shot": "Single character portrait of {character_name}: {character_description}. Standing in a neutral pose facing slightly toward camera, full body visible, {style_prompt}. Clean background with subtle {location} elements. Character should be clearly identifiable for reference purposes.",
+    "group_shot": "Group scene with {character_list}: {character_descriptions}. Characters standing together in a friendly pose, all clearly visible, {style_prompt}. Background setting: {location_description}. All characters should be clearly identifiable and consistent with their individual designs.",
+    "scene": "Scene depicting: {scene_description}. Characters present: {character_list}. {style_prompt}. Setting: {location_description}. Maintain exact character appearances from reference images. {additional_notes}",
+    "cover": "Book cover illustration for '{book_title}' - a children's storybook about {virtue}. Featured character: {featured_character_name} ({featured_character_description}). {style_prompt}. Dynamic, eye-catching composition suitable for a book cover. Title space at top. Setting hints: {location_description}.",
+    "consistency_suffix": "Maintain: exact same character appearance, clothing, fur texture, eye style, proportions from reference image."
+  },
+  "generation_settings": {
+    "rate_limit_delay_seconds": 1,
+    "max_retries": 3,
+    "save_prompts": true,
+    "auto_backup": true
+  }
+}

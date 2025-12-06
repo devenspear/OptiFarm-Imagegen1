@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Optimist Farm Generator{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand': {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        'accent': {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .nav-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .virtue-badge {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+        .accent-gradient {
+            background: linear-gradient(135deg, #22c55e, #6366f1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="nav-gradient text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/" class="flex items-center space-x-3">
+                    <span class="text-3xl">🐰</span>
+                    <span class="text-xl font-bold">Optimist Farm Generator</span>
+                </a>
+                <div class="flex space-x-6">
+                    <a href="/" class="hover:text-yellow-200 transition {% if request.path == '/' %}font-bold{% endif %}">Dashboard</a>
+                    <a href="/characters" class="hover:text-yellow-200 transition {% if request.path == '/characters' %}font-bold{% endif %}">Characters</a>
+                    <a href="/books" class="hover:text-yellow-200 transition {% if request.path == '/books' %}font-bold{% endif %}">Books</a>
+                    <a href="/generate" class="hover:text-yellow-200 transition {% if request.path == '/generate' %}font-bold{% endif %}">Generate</a>
+                    <a href="/gallery" class="hover:text-yellow-200 transition {% if request.path == '/gallery' %}font-bold{% endif %}">Gallery</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>Optimist Farm Storybook Generator v2.0 | Based on Writing Bible v2.4</p>
+            <p class="text-sm mt-2">Powered by Flux Kontext via fal.ai</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
