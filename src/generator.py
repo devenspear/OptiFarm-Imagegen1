@@ -36,6 +36,7 @@ class GenerationResult:
     """Result of an image generation."""
     success: bool
     output_path: Optional[str] = None
+    image_url: Optional[str] = None  # Direct URL from fal.ai (for serverless)
     prompt_used: str = ""
     error: Optional[str] = None
     cost: float = 0.04
@@ -45,6 +46,11 @@ class GenerationResult:
     def __post_init__(self):
         if self.metadata is None:
             self.metadata = {}
+
+
+def is_serverless():
+    """Check if running in a serverless environment (Vercel, AWS Lambda, etc.)."""
+    return os.environ.get('VERCEL') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME')
 
 
 class OptimistFarmGenerator:
@@ -61,16 +67,23 @@ class OptimistFarmGenerator:
     All parameters are configurable via ConfigManager.
     """
 
-    def __init__(self, config: Optional[ConfigManager] = None):
+    def __init__(self, config: Optional[ConfigManager] = None, save_to_disk: bool = None):
         """
         Initialize generator.
 
         Args:
             config: ConfigManager instance. Uses default if not provided.
+            save_to_disk: Whether to save images to disk. Auto-detected if None.
         """
         self.config = config or get_config()
         self._check_api_key()
         self._uploaded_images: Dict[str, str] = {}  # Cache for uploaded image URLs
+
+        # Auto-detect if we should save to disk (disabled in serverless)
+        if save_to_disk is None:
+            self.save_to_disk = not is_serverless()
+        else:
+            self.save_to_disk = save_to_disk
 
     def _check_api_key(self) -> None:
         """Check if API key is set."""
@@ -292,29 +305,32 @@ class OptimistFarmGenerator:
             # Call API
             result = self._call_api(prompt, ref_url)
 
-            # Determine output path
-            output_dir = Path(self.config.paths.get("character_references", "./reference_images/characters"))
-            char_dir = self._ensure_directory(output_dir / character_id)
-
-            if output_name:
-                filename = f"{output_name}.jpg"
-            else:
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"hero_{timestamp}.jpg"
-
-            output_path = char_dir / filename
-
-            # Save image
+            # Get the generated image URL
             image_url = result["images"][0]["url"]
-            saved_path = self._save_image(image_url, output_path, prompt=prompt)
-
             generation_time = time.time() - start_time
-            print(f"  Saved: {saved_path}")
+            saved_path = None
+
+            # Save to disk if not in serverless environment
+            if self.save_to_disk:
+                output_dir = Path(self.config.paths.get("character_references", "./reference_images/characters"))
+                char_dir = self._ensure_directory(output_dir / character_id)
+
+                if output_name:
+                    filename = f"{output_name}.jpg"
+                else:
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"hero_{timestamp}.jpg"
+
+                output_path = char_dir / filename
+                saved_path = self._save_image(image_url, output_path, prompt=prompt)
+                print(f"  Saved: {saved_path}")
+
             print(f"  Time: {generation_time:.1f}s | Cost: ${self.config.cost_per_image}")
 
             return GenerationResult(
                 success=True,
                 output_path=saved_path,
+                image_url=image_url,
                 prompt_used=prompt,
                 cost=self.config.cost_per_image,
                 generation_time=generation_time,
@@ -446,30 +462,33 @@ class OptimistFarmGenerator:
             # Call API
             result = self._call_api(prompt, ref_url)
 
-            # Determine output path
-            output_dir = Path(self.config.paths.get("group_shots", "./reference_images/group_shots"))
-            output_dir = self._ensure_directory(output_dir)
-
-            if output_name:
-                filename = f"{output_name}.jpg"
-            else:
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                char_abbrev = "_".join([c[:3] for c in character_ids[:4]])
-                filename = f"group_{char_abbrev}_{timestamp}.jpg"
-
-            output_path = output_dir / filename
-
-            # Save image
+            # Get the generated image URL
             image_url = result["images"][0]["url"]
-            saved_path = self._save_image(image_url, output_path, prompt=prompt)
-
             generation_time = time.time() - start_time
-            print(f"  Saved: {saved_path}")
+            saved_path = None
+
+            # Save to disk if not in serverless environment
+            if self.save_to_disk:
+                output_dir = Path(self.config.paths.get("group_shots", "./reference_images/group_shots"))
+                output_dir = self._ensure_directory(output_dir)
+
+                if output_name:
+                    filename = f"{output_name}.jpg"
+                else:
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    char_abbrev = "_".join([c[:3] for c in character_ids[:4]])
+                    filename = f"group_{char_abbrev}_{timestamp}.jpg"
+
+                output_path = output_dir / filename
+                saved_path = self._save_image(image_url, output_path, prompt=prompt)
+                print(f"  Saved: {saved_path}")
+
             print(f"  Time: {generation_time:.1f}s | Cost: ${self.config.cost_per_image}")
 
             return GenerationResult(
                 success=True,
                 output_path=saved_path,
+                image_url=image_url,
                 prompt_used=prompt,
                 cost=self.config.cost_per_image,
                 generation_time=generation_time,
@@ -555,30 +574,33 @@ class OptimistFarmGenerator:
             # Call API
             result = self._call_api(prompt, ref_url)
 
-            # Determine output path
-            output_dir = Path(self.config.paths.get("output", "./output"))
-            output_dir = self._ensure_directory(output_dir)
-
-            if output_name:
-                filename = f"{output_name}.jpg"
-            else:
-                timestamp = datetime.now().strftime("%H%M%S")
-                safe_prompt = scene_prompt[:25].replace(" ", "_").replace(",", "")
-                filename = f"scene_{safe_prompt}_{timestamp}.jpg"
-
-            output_path = output_dir / filename
-
-            # Save image
+            # Get the generated image URL
             image_url = result["images"][0]["url"]
-            saved_path = self._save_image(image_url, output_path, prompt=prompt)
-
             generation_time = time.time() - start_time
-            print(f"  Saved: {saved_path}")
+            saved_path = None
+
+            # Save to disk if not in serverless environment
+            if self.save_to_disk:
+                output_dir = Path(self.config.paths.get("output", "./output"))
+                output_dir = self._ensure_directory(output_dir)
+
+                if output_name:
+                    filename = f"{output_name}.jpg"
+                else:
+                    timestamp = datetime.now().strftime("%H%M%S")
+                    safe_prompt = scene_prompt[:25].replace(" ", "_").replace(",", "")
+                    filename = f"scene_{safe_prompt}_{timestamp}.jpg"
+
+                output_path = output_dir / filename
+                saved_path = self._save_image(image_url, output_path, prompt=prompt)
+                print(f"  Saved: {saved_path}")
+
             print(f"  Time: {generation_time:.1f}s | Cost: ${self.config.cost_per_image}")
 
             return GenerationResult(
                 success=True,
                 output_path=saved_path,
+                image_url=image_url,
                 prompt_used=prompt,
                 cost=self.config.cost_per_image,
                 generation_time=generation_time,
@@ -665,28 +687,31 @@ class OptimistFarmGenerator:
             # Call API
             result = self._call_api(prompt, ref_url)
 
-            # Determine output path
-            output_dir = Path(self.config.paths.get("covers_output", "./output/covers"))
-            output_dir = self._ensure_directory(output_dir)
-
-            if output_name:
-                filename = f"{output_name}.jpg"
-            else:
-                filename = f"cover_{book_id}.jpg"
-
-            output_path = output_dir / filename
-
-            # Save image
+            # Get the generated image URL
             image_url = result["images"][0]["url"]
-            saved_path = self._save_image(image_url, output_path, prompt=prompt)
-
             generation_time = time.time() - start_time
-            print(f"  Saved: {saved_path}")
+            saved_path = None
+
+            # Save to disk if not in serverless environment
+            if self.save_to_disk:
+                output_dir = Path(self.config.paths.get("covers_output", "./output/covers"))
+                output_dir = self._ensure_directory(output_dir)
+
+                if output_name:
+                    filename = f"{output_name}.jpg"
+                else:
+                    filename = f"cover_{book_id}.jpg"
+
+                output_path = output_dir / filename
+                saved_path = self._save_image(image_url, output_path, prompt=prompt)
+                print(f"  Saved: {saved_path}")
+
             print(f"  Time: {generation_time:.1f}s | Cost: ${self.config.cost_per_image}")
 
             return GenerationResult(
                 success=True,
                 output_path=saved_path,
+                image_url=image_url,
                 prompt_used=prompt,
                 cost=self.config.cost_per_image,
                 generation_time=generation_time,

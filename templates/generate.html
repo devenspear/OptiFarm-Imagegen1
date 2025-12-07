@@ -325,19 +325,30 @@ function showResult(success, data) {
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     if (success) {
+        // Use image_url if available (serverless), otherwise use local path
+        const imageSource = data.image_url || `/images/${data.output_path}`;
+        const pathInfo = data.output_path
+            ? `Image saved to: <code class="bg-emerald-100 px-2 py-0.5 rounded text-xs">${data.output_path}</code>`
+            : `Image generated successfully (serverless mode)`;
+
         content.innerHTML = `
             <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-5 rounded-lg mb-6">
                 <div class="flex items-start">
                     <span class="text-2xl mr-3">✓</span>
                     <div>
                         <p class="font-semibold text-lg">Success!</p>
-                        <p class="text-sm mt-1">Image saved to: <code class="bg-emerald-100 px-2 py-0.5 rounded text-xs">${data.output_path}</code></p>
+                        <p class="text-sm mt-1">${pathInfo}</p>
                         <p class="text-sm">Cost: $${data.cost.toFixed(2)}</p>
                     </div>
                 </div>
             </div>
             <div class="text-center">
-                <img src="/images/${data.output_path}" alt="Generated image" class="max-w-full h-auto rounded-lg shadow-lg mx-auto border border-gray-200" style="max-height: 600px;">
+                <img src="${imageSource}" alt="Generated image" class="max-w-full h-auto rounded-lg shadow-lg mx-auto border border-gray-200" style="max-height: 600px;">
+                <div class="mt-4">
+                    <a href="${imageSource}" download class="inline-flex items-center px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition text-sm">
+                        <span class="mr-2">⬇</span> Download Image
+                    </a>
+                </div>
             </div>
         `;
     } else {

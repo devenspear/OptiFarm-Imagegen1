@@ -257,6 +257,7 @@ def api_generate_hero():
     return jsonify({
         'success': result.success,
         'output_path': result.output_path,
+        'image_url': result.image_url,
         'cost': result.cost,
         'error': result.error
     })
@@ -289,6 +290,7 @@ def api_generate_group():
     return jsonify({
         'success': result.success,
         'output_path': result.output_path,
+        'image_url': result.image_url,
         'cost': result.cost,
         'error': result.error
     })
@@ -323,6 +325,7 @@ def api_generate_scene():
     return jsonify({
         'success': result.success,
         'output_path': result.output_path,
+        'image_url': result.image_url,
         'cost': result.cost,
         'error': result.error
     })
@@ -353,6 +356,7 @@ def api_generate_cover():
     return jsonify({
         'success': result.success,
         'output_path': result.output_path,
+        'image_url': result.image_url,
         'cost': result.cost,
         'error': result.error
     })
