@@ -4,21 +4,59 @@ AI-powered children's storybook illustration generator based on the Optimist Far
 
 Generate consistent character references, group shots, scene illustrations, and book covers for your storybook series using Flux Kontext API.
 
+## Live Demo
+
+**Web App**: [https://optifarm-imagegen1.vercel.app](https://optifarm-imagegen1.vercel.app)
+
+**GitHub**: [https://github.com/devenspear/OptiFarm-Imagegen1](https://github.com/devenspear/OptiFarm-Imagegen1)
+
 ---
 
 ## Features
 
+- **Web UI** - Beautiful Flask-based interface for easy image generation
 - **17 Pre-configured Characters** from Writing Bible v2.4 (Ollie, Barnaby, Pearl, Gus, etc.)
 - **13 Books** with virtues framework (Courage, Empathy, Teamwork, etc.)
 - **10 Locations** (Garden, Barn, Pond, Meadow, etc.)
 - **4 Style Presets** (Saturated Rainbow, Pixar, Watercolor, Cartoon)
 - **Fully Configurable** - all settings in JSON, update anytime
 - **Multiple Generation Modes**: Hero shots, group shots, scenes, covers, full books
+- **Serverless Ready** - Works on Vercel, AWS Lambda, and locally
 - **Low Cost**: ~$0.04 per image via fal.ai
 
 ---
 
-## Quick Start
+## Web UI
+
+The easiest way to use the generator is through the web interface:
+
+### Local Development
+
+```bash
+# Install dependencies
+pip install flask fal-client requests
+
+# Set API key
+export FAL_KEY="your-api-key-from-fal.ai"
+
+# Run the web app
+python3 web_app.py
+
+# Open http://localhost:8080
+```
+
+### Vercel Deployment
+
+The app is pre-configured for Vercel deployment:
+
+1. Fork or clone the repository
+2. Connect to Vercel
+3. Add `FAL_KEY` environment variable in Vercel settings
+4. Deploy
+
+---
+
+## Quick Start (CLI)
 
 ### 1. Install Dependencies
 
@@ -67,10 +105,28 @@ python3 generate.py book book_01_courage --ref ./reference.jpg
 
 ---
 
+## Important: Reference Images
+
+Flux Kontext is an **image-to-image model**. You must provide a reference image URL for all generations.
+
+**Supported URL sources:**
+- Direct image URLs (ending in .jpg, .png, etc.)
+- Imgur
+- Cloudinary
+- Any public image host
+
+**NOT supported:**
+- Google Drive links
+- Dropbox links (unless using `dl=1`)
+- OneDrive links
+
+---
+
 ## Project Structure
 
 ```
 OptiFarm-ImageGenerator1.0/
+├── web_app.py                     # Flask web application
 ├── generate.py                    # Main CLI entry point
 ├── config/
 │   └── master_config.json         # All settings, characters, books, styles
@@ -78,6 +134,13 @@ OptiFarm-ImageGenerator1.0/
 │   ├── __init__.py
 │   ├── config_manager.py          # Configuration loading and management
 │   └── generator.py               # Core image generation engine
+├── templates/                     # Flask HTML templates
+│   ├── base.html
+│   ├── index.html
+│   ├── generate.html
+│   ├── characters.html
+│   ├── books.html
+│   └── gallery.html
 ├── reference_images/
 │   ├── characters/                # Character hero shots (generated)
 │   ├── group_shots/               # Group reference images
@@ -85,6 +148,8 @@ OptiFarm-ImageGenerator1.0/
 ├── output/
 │   ├── books/                     # Generated book pages
 │   └── covers/                    # Generated covers
+├── vercel.json                    # Vercel deployment config
+├── requirements.txt               # Python dependencies
 └── ReferenceDocs/                 # Writing Bible, Strategic Playbook
 ```
 
@@ -322,7 +387,11 @@ config = get_config()
 generator = get_generator(config)
 
 # Generate hero shot
-result = generator.generate_hero_shot("barnaby_bunny")
+result = generator.generate_hero_shot(
+    "barnaby_bunny",
+    reference_image="./reference.jpg"
+)
+print(f"Image URL: {result.image_url}")
 print(f"Saved to: {result.output_path}")
 
 # Generate group shot
@@ -368,26 +437,6 @@ results = generator.generate_book(
 
 ---
 
-## Workflow Recommendations
-
-### Initial Setup
-1. Generate hero shots for all characters (creates reference library)
-2. Review and select best hero shots for each character
-3. Generate group shots for common character combinations
-
-### Per-Book Generation
-1. Add scene prompts to config for the book
-2. Generate book with hero shot as reference
-3. Review generated images
-4. Regenerate any imperfect pages individually
-
-### Iteration
-1. Adjust style preset if needed
-2. Modify prompt templates in config
-3. Update character descriptions for better consistency
-
----
-
 ## Troubleshooting
 
 **"FAL_KEY not set"**
@@ -402,6 +451,12 @@ cd /path/to/OptiFarm-ImageGenerator1.0
 python3 generate.py list characters
 ```
 
+**"Google Drive links not supported"**
+Google Drive, Dropbox, and OneDrive links don't work with fal.ai. Upload your reference image to Imgur, Cloudinary, or another direct image host.
+
+**"Read-only file system" (Vercel)**
+This is handled automatically. The app returns the fal.ai image URL directly instead of saving to disk.
+
 **"No scenes defined for book"**
 Add scenes to the book in `config/master_config.json`
 
@@ -409,6 +464,34 @@ Add scenes to the book in `config/master_config.json`
 - Use a clearer reference image
 - Increase guidance_scale: `python3 generate.py config --set api.defaults.guidance_scale=4.0`
 - Add more detail to character descriptions in config
+
+---
+
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| FAL_KEY | fal.ai API key | Yes |
+| VERCEL | Auto-set by Vercel (enables serverless mode) | Auto |
+
+---
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push code to GitHub
+2. Import project in Vercel
+3. Add `FAL_KEY` environment variable
+4. Deploy
+
+### Local Development
+
+```bash
+pip install -r requirements.txt
+export FAL_KEY="your-key"
+python3 web_app.py
+```
 
 ---
 
@@ -431,5 +514,12 @@ The original scripts are still available for simple use cases:
 
 ## Version History
 
+- **v2.1** - Added Web UI, Vercel deployment, serverless support
 - **v2.0** - Full rewrite with configurable system, 17 characters, 13 books, CLI interface
 - **v1.0** - Original toolkit with basic generation
+
+---
+
+## License
+
+Private - Optimist Farm is a registered trademark.
