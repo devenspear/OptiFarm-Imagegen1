@@ -3,214 +3,335 @@
 {% block title %}Generate - Optimist Farm Generator{% endblock %}
 
 {% block content %}
-<div class="space-y-8">
-    <!-- Header -->
-    <div class="text-center">
-        <h1 class="text-4xl font-bold text-gray-800 mb-2">Generate Images</h1>
-        <p class="text-gray-500">Create hero shots, group shots, scenes, and covers</p>
-    </div>
-
-    <!-- Important Notice -->
-    <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg">
-        <div class="flex items-start">
-            <span class="text-xl mr-3">💡</span>
-            <div>
-                <p class="font-semibold">Reference Image Required</p>
-                <p class="text-sm text-amber-700 mt-1">Flux Kontext is an image-to-image model. You must provide a reference image URL for character consistency.</p>
-                <p class="text-sm text-amber-600 mt-2"><strong>Note:</strong> Google Drive links don't work directly. Use a direct image URL (e.g., from Imgur, Cloudinary, or a public web host).</p>
+<div class="space-y-6">
+    <!-- Compact Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Generate Images</h1>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Create hero shots, group shots, scenes, and covers</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-gray-500 dark:text-gray-400">Style:</span>
+            <div class="flex gap-1">
+                {% for style in styles %}
+                <button onclick="setStyle('{{ style.id }}')"
+                        class="px-3 py-1.5 rounded-full text-xs font-medium transition
+                               {% if style.id == active_style %}
+                               bg-indigo-600 text-white shadow-sm
+                               {% else %}
+                               bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600
+                               {% endif %}">
+                    {{ style.name.split('(')[0].strip() if '(' in style.name else style.name }}
+                </button>
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <!-- Generation Type Tabs -->
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-        <div class="flex border-b border-gray-200 bg-gray-50">
-            <button onclick="showTab('hero')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-white transition border-b-2 border-indigo-500 text-indigo-600 bg-white" data-tab="hero">
-                <span class="text-lg mr-2">🐰</span> Hero Shot
-            </button>
-            <button onclick="showTab('group')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-white transition border-b-2 border-transparent text-gray-500" data-tab="group">
-                <span class="text-lg mr-2">👥</span> Group Shot
-            </button>
-            <button onclick="showTab('scene')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-white transition border-b-2 border-transparent text-gray-500" data-tab="scene">
-                <span class="text-lg mr-2">🎬</span> Scene
-            </button>
-            <button onclick="showTab('cover')" class="tab-btn flex-1 py-4 text-center font-medium hover:bg-white transition border-b-2 border-transparent text-gray-500" data-tab="cover">
-                <span class="text-lg mr-2">📕</span> Cover
-            </button>
-        </div>
+    <!-- Generation Type Cards -->
+    <div class="grid grid-cols-4 gap-3">
+        <button onclick="showTab('hero')" class="tab-btn group relative overflow-hidden rounded-xl p-4 text-left transition-all duration-200 bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/25 ring-2 ring-emerald-400" data-tab="hero">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🐰</span>
+                <div>
+                    <div class="font-semibold text-lg">Hero Shot</div>
+                    <div class="text-xs opacity-80">Single character</div>
+                </div>
+            </div>
+        </button>
+        <button onclick="showTab('group')" class="tab-btn group relative overflow-hidden rounded-xl p-4 text-left transition-all duration-200 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-md" data-tab="group">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl opacity-70 group-hover:opacity-100 transition">👥</span>
+                <div>
+                    <div class="font-semibold text-lg text-gray-700 dark:text-gray-200">Group Shot</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Multiple characters</div>
+                </div>
+            </div>
+        </button>
+        <button onclick="showTab('scene')" class="tab-btn group relative overflow-hidden rounded-xl p-4 text-left transition-all duration-200 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md" data-tab="scene">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl opacity-70 group-hover:opacity-100 transition">🎬</span>
+                <div>
+                    <div class="font-semibold text-lg text-gray-700 dark:text-gray-200">Scene</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Story illustration</div>
+                </div>
+            </div>
+        </button>
+        <button onclick="showTab('cover')" class="tab-btn group relative overflow-hidden rounded-xl p-4 text-left transition-all duration-200 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-violet-400 dark:hover:border-violet-500 hover:shadow-md" data-tab="cover">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl opacity-70 group-hover:opacity-100 transition">📕</span>
+                <div>
+                    <div class="font-semibold text-lg text-gray-700 dark:text-gray-200">Cover</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Book cover art</div>
+                </div>
+            </div>
+        </button>
+    </div>
 
+    <!-- Main Form Area -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
         <!-- Hero Shot Form -->
-        <div id="hero-tab" class="tab-content p-8">
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Generate Hero Shot</h2>
-                <p class="text-gray-500 mb-6">Create a single character reference image</p>
-
-                <form id="hero-form" class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Character *</label>
-                        <select name="character_id" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                            <option value="">Select a character...</option>
+        <div id="hero-tab" class="tab-content p-6">
+            <form id="hero-form" class="space-y-6">
+                <!-- Inline fields row -->
+                <div class="flex gap-4 items-end">
+                    <div class="flex-1 min-w-[200px] max-w-xs">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Character</label>
+                        <select name="character_id" required class="w-full border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 dark:text-gray-100 text-base font-medium cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition">
+                            <option value="">Select character...</option>
                             {% for char in characters %}
-                            <option value="{{ char.id }}">{{ char.name }} ({{ char.role }})</option>
+                            <option value="{{ char.id }}">{{ char.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Location (optional)</label>
-                        <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                    <div class="flex-1 min-w-[180px] max-w-xs">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Location <span class="font-normal text-gray-400">(optional)</span></label>
+                        <select name="location_id" class="w-full border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 dark:text-gray-100 text-base cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition">
                             <option value="">Neutral background</option>
                             {% for loc in locations %}
                             <option value="{{ loc.id }}">{{ loc.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
-                        <input type="url" name="reference_image" required placeholder="https://example.com/image.jpg"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        <p class="text-xs text-gray-500 mt-2">Direct image URL required. Google Drive/Dropbox links won't work.</p>
+                    <div class="flex-[2] min-w-[300px]">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Reference Image</label>
+                        <div class="ref-image-zone relative" data-form="hero">
+                            <input type="hidden" name="reference_image" required>
+                            <div class="drop-zone border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3.5 bg-white dark:bg-gray-700 hover:border-emerald-400 dark:hover:border-emerald-500 transition cursor-pointer flex items-center gap-3"
+                                 onclick="this.parentElement.querySelector('.file-input').click()">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-600 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <input type="text" class="url-input w-full bg-transparent border-0 p-0 text-base text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-0 focus:outline-none"
+                                           placeholder="Drop image or paste URL..." onclick="event.stopPropagation()">
+                                </div>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">or drag file</span>
+                            </div>
+                            <input type="file" class="file-input hidden" accept="image/*">
+                            <div class="preview-container hidden mt-2 relative">
+                                <img class="preview-image h-16 rounded-lg object-cover border border-gray-200 dark:border-gray-600">
+                                <button type="button" class="clear-preview absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-sm hover:bg-red-600 transition">&times;</button>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white py-3.5 rounded-lg font-semibold transition shadow-sm">
-                        Generate Hero Shot (~$0.04)
+                <!-- Action row -->
+                <div class="flex items-center justify-between pt-2">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <span class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            Drag local images or paste URLs
+                        </span>
+                    </p>
+                    <button type="submit" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 active:scale-[0.98]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        Generate Hero Shot
+                        <span class="text-emerald-200 text-sm font-normal">~$0.04</span>
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
 
         <!-- Group Shot Form -->
-        <div id="group-tab" class="tab-content p-8 hidden">
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Generate Group Shot</h2>
-                <p class="text-gray-500 mb-6">Create an image with multiple characters together</p>
-
-                <form id="group-form" class="space-y-5">
+        <div id="group-tab" class="tab-content p-6 hidden">
+            <form id="group-form" class="space-y-6">
+                <div class="grid grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Characters * (select multiple)</label>
-                        <select name="character_ids" multiple required class="w-full border border-gray-300 rounded-lg px-4 py-3 h-40 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Characters <span class="font-normal text-gray-400">(select multiple)</span></label>
+                        <select name="character_ids" multiple required class="w-full border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2 h-40 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 bg-white dark:bg-gray-700 dark:text-gray-100 text-base cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition">
                             {% for char in characters %}
                             <option value="{{ char.id }}">{{ char.name }}</option>
                             {% endfor %}
                         </select>
-                        <p class="text-xs text-gray-500 mt-2">Hold Ctrl/Cmd to select multiple</p>
+                        <p class="text-xs text-gray-400 mt-2">Hold Ctrl/Cmd to select multiple</p>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Location (optional)</label>
-                        <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                            <option value="">Farm setting</option>
-                            {% for loc in locations %}
-                            <option value="{{ loc.id }}">{{ loc.name }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Location <span class="font-normal text-gray-400">(optional)</span></label>
+                            <select name="location_id" class="w-full border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 bg-white dark:bg-gray-700 dark:text-gray-100 text-base cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition">
+                                <option value="">Farm setting</option>
+                                {% for loc in locations %}
+                                <option value="{{ loc.id }}">{{ loc.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Reference Image</label>
+                            <div class="ref-image-zone relative" data-form="group">
+                                <input type="hidden" name="reference_image" required>
+                                <div class="drop-zone border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3.5 bg-white dark:bg-gray-700 hover:border-slate-400 dark:hover:border-slate-500 transition cursor-pointer flex items-center gap-3"
+                                     onclick="this.parentElement.querySelector('.file-input').click()">
+                                    <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-600 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <input type="text" class="url-input w-full bg-transparent border-0 p-0 text-base text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-0 focus:outline-none"
+                                               placeholder="Drop image or paste URL..." onclick="event.stopPropagation()">
+                                    </div>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">or drag file</span>
+                                </div>
+                                <input type="file" class="file-input hidden" accept="image/*">
+                                <div class="preview-container hidden mt-2 relative">
+                                    <img class="preview-image h-16 rounded-lg object-cover border border-gray-200 dark:border-gray-600">
+                                    <button type="button" class="clear-preview absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-sm hover:bg-red-600 transition">&times;</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
-                        <input type="url" name="reference_image" required placeholder="https://example.com/image.jpg"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        <p class="text-xs text-gray-500 mt-2">Direct image URL required. Google Drive/Dropbox links won't work.</p>
-                    </div>
-
-                    <button type="submit" class="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white py-3.5 rounded-lg font-semibold transition shadow-sm">
-                        Generate Group Shot (~$0.04)
+                <div class="flex items-center justify-between pt-2">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <span class="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            Drag local images or paste URLs
+                        </span>
+                    </p>
+                    <button type="submit" class="inline-flex items-center gap-2 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg shadow-slate-500/25 hover:shadow-xl active:scale-[0.98]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Generate Group Shot
+                        <span class="text-slate-300 text-sm font-normal">~$0.04</span>
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
 
         <!-- Scene Form -->
-        <div id="scene-tab" class="tab-content p-8 hidden">
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Generate Scene</h2>
-                <p class="text-gray-500 mb-6">Create a story scene with characters in action</p>
+        <div id="scene-tab" class="tab-content p-6 hidden">
+            <form id="scene-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Scene Description</label>
+                    <textarea name="prompt" required rows="2" placeholder="e.g., Barnaby discovering a treasure map in the hay loft, excited expression, morning light streaming through the window..."
+                              class="w-full border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 text-base hover:border-gray-300 dark:hover:border-gray-500 transition resize-none"></textarea>
+                </div>
 
-                <form id="scene-form" class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Scene Description *</label>
-                        <textarea name="prompt" required rows="3" placeholder="e.g., Barnaby discovering a treasure map in the hay loft, excited expression, morning light..."
-                                  class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Characters (select multiple)</label>
-                        <select name="character_ids" multiple class="w-full border border-gray-300 rounded-lg px-4 py-3 h-32 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                <div class="flex gap-4 items-end">
+                    <div class="flex-1 max-w-sm">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Characters <span class="font-normal text-gray-400">(optional)</span></label>
+                        <select name="character_ids" multiple class="w-full border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2 h-32 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 dark:text-gray-100 text-base cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition">
                             {% for char in characters %}
                             <option value="{{ char.id }}">{{ char.name }}</option>
                             {% endfor %}
                         </select>
-                        <p class="text-xs text-gray-500 mt-2">Hold Ctrl/Cmd to select multiple</p>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                        <select name="location_id" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                    <div class="w-56">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Location</label>
+                        <select name="location_id" class="w-full border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 dark:text-gray-100 text-base cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition">
                             <option value="">Auto from prompt</option>
                             {% for loc in locations %}
                             <option value="{{ loc.id }}">{{ loc.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
-                        <input type="url" name="reference_image" required placeholder="https://example.com/image.jpg"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        <p class="text-xs text-gray-500 mt-2">Direct image URL required. Google Drive/Dropbox links won't work.</p>
+                    <div class="flex-1">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Reference Image</label>
+                        <div class="ref-image-zone relative" data-form="scene">
+                            <input type="hidden" name="reference_image" required>
+                            <div class="drop-zone border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3.5 bg-white dark:bg-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500 transition cursor-pointer flex items-center gap-3"
+                                 onclick="this.parentElement.querySelector('.file-input').click()">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-600 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <input type="text" class="url-input w-full bg-transparent border-0 p-0 text-base text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-0 focus:outline-none"
+                                           placeholder="Drop image or paste URL..." onclick="event.stopPropagation()">
+                                </div>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">or drag file</span>
+                            </div>
+                            <input type="file" class="file-input hidden" accept="image/*">
+                            <div class="preview-container hidden mt-2 relative">
+                                <img class="preview-image h-16 rounded-lg object-cover border border-gray-200 dark:border-gray-600">
+                                <button type="button" class="clear-preview absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-sm hover:bg-red-600 transition">&times;</button>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white py-3.5 rounded-lg font-semibold transition shadow-sm">
-                        Generate Scene (~$0.04)
+                <div class="flex items-center justify-between pt-2">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <span class="inline-flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            Drag local images or paste URLs
+                        </span>
+                    </p>
+                    <button type="submit" class="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 active:scale-[0.98]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        Generate Scene
+                        <span class="text-indigo-200 text-sm font-normal">~$0.04</span>
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
 
         <!-- Cover Form -->
-        <div id="cover-tab" class="tab-content p-8 hidden">
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Generate Book Cover</h2>
-                <p class="text-gray-500 mb-6">Create a cover image for a book</p>
-
-                <form id="cover-form" class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Book *</label>
-                        <select name="book_id" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+        <div id="cover-tab" class="tab-content p-6 hidden">
+            <form id="cover-form" class="space-y-6">
+                <div class="flex gap-4 items-end">
+                    <div class="flex-1 max-w-md">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Book</label>
+                        <select name="book_id" required class="w-full border-2 border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-white dark:bg-gray-700 dark:text-gray-100 text-base font-medium cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition">
                             <option value="">Select a book...</option>
                             {% for book in books %}
                             <option value="{{ book.id }}">Book {{ book.number }}: {{ book.title }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Reference Image URL *</label>
-                        <input type="url" name="reference_image" required placeholder="https://example.com/image.jpg"
-                               class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        <p class="text-xs text-gray-500 mt-2">Direct image URL required. Google Drive/Dropbox links won't work.</p>
+                    <div class="flex-1">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Reference Image</label>
+                        <div class="ref-image-zone relative" data-form="cover">
+                            <input type="hidden" name="reference_image" required>
+                            <div class="drop-zone border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3.5 bg-white dark:bg-gray-700 hover:border-violet-400 dark:hover:border-violet-500 transition cursor-pointer flex items-center gap-3"
+                                 onclick="this.parentElement.querySelector('.file-input').click()">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-600 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-gray-400 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <input type="text" class="url-input w-full bg-transparent border-0 p-0 text-base text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-0 focus:outline-none"
+                                           placeholder="Drop image or paste URL..." onclick="event.stopPropagation()">
+                                </div>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">or drag file</span>
+                            </div>
+                            <input type="file" class="file-input hidden" accept="image/*">
+                            <div class="preview-container hidden mt-2 relative">
+                                <img class="preview-image h-16 rounded-lg object-cover border border-gray-200 dark:border-gray-600">
+                                <button type="button" class="clear-preview absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-sm hover:bg-red-600 transition">&times;</button>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <button type="submit" class="w-full bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white py-3.5 rounded-lg font-semibold transition shadow-sm">
-                        Generate Cover (~$0.04)
+                <div class="flex items-center justify-between pt-2">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <span class="inline-flex items-center gap-1.5 text-violet-600 dark:text-violet-400">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            Drag local images or paste URLs
+                        </span>
+                    </p>
+                    <button type="submit" class="inline-flex items-center gap-2 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30 active:scale-[0.98]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        Generate Cover
+                        <span class="text-violet-200 text-sm font-normal">~$0.04</span>
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- Generation Status -->
     <div id="status-container" class="hidden">
-        <div class="bg-indigo-50 border border-indigo-200 text-indigo-800 p-5 rounded-lg">
+        <div class="bg-indigo-50 dark:bg-indigo-900/30 border-2 border-indigo-200 dark:border-indigo-700 text-indigo-800 dark:text-indigo-200 p-6 rounded-2xl">
             <div class="flex items-center">
-                <svg class="animate-spin h-6 w-6 mr-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+                <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-800 flex items-center justify-center mr-4">
+                    <svg class="animate-spin h-6 w-6 text-indigo-600 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
                 <div>
-                    <p class="font-semibold text-lg">Generating...</p>
-                    <p class="text-sm text-indigo-600" id="status-message">Please wait, this may take 10-30 seconds</p>
+                    <p class="font-bold text-xl">Generating your image...</p>
+                    <p class="text-indigo-600 dark:text-indigo-300" id="status-message">This typically takes 10-30 seconds</p>
                 </div>
             </div>
         </div>
@@ -218,43 +339,61 @@
 
     <!-- Result Display -->
     <div id="result-container" class="hidden">
-        <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Generation Result</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Generation Result</h2>
             <div id="result-content"></div>
-        </div>
-    </div>
-
-    <!-- Active Style -->
-    <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Active Style: <span class="text-indigo-600 capitalize">{{ active_style }}</span></h2>
-        <div class="flex flex-wrap gap-2">
-            {% for style in styles %}
-            <button onclick="setStyle('{{ style.id }}')"
-                    class="px-4 py-2 rounded-lg text-sm font-medium transition border
-                           {% if style.id == active_style %}
-                           bg-indigo-600 text-white border-indigo-600
-                           {% else %}
-                           bg-white text-gray-600 border-gray-300 hover:border-indigo-300 hover:text-indigo-600
-                           {% endif %}">
-                {{ style.name }}
-            </button>
-            {% endfor %}
         </div>
     </div>
 </div>
 
 <script>
 function showTab(tabName) {
+    // Hide all tab contents
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+
+    // Reset all tab buttons to inactive state
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('border-indigo-500', 'text-indigo-600', 'bg-white');
-        btn.classList.add('border-transparent', 'text-gray-500');
+        btn.className = 'tab-btn group relative overflow-hidden rounded-xl p-4 text-left transition-all duration-200 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:shadow-md';
+        if (btn.dataset.tab === 'hero') btn.classList.add('hover:border-emerald-400', 'dark:hover:border-emerald-500');
+        else if (btn.dataset.tab === 'group') btn.classList.add('hover:border-slate-400', 'dark:hover:border-slate-500');
+        else if (btn.dataset.tab === 'scene') btn.classList.add('hover:border-indigo-400', 'dark:hover:border-indigo-500');
+        else if (btn.dataset.tab === 'cover') btn.classList.add('hover:border-violet-400', 'dark:hover:border-violet-500');
+
+        // Reset icon and text styles
+        const icon = btn.querySelector('span.text-3xl');
+        const title = btn.querySelector('.font-semibold');
+        const subtitle = btn.querySelector('.text-xs');
+        if (icon) icon.className = 'text-3xl opacity-70 group-hover:opacity-100 transition';
+        if (title) title.className = 'font-semibold text-lg text-gray-700 dark:text-gray-200';
+        if (subtitle) subtitle.className = 'text-xs text-gray-500 dark:text-gray-400';
     });
 
+    // Show selected tab content
     document.getElementById(tabName + '-tab').classList.remove('hidden');
+
+    // Style active tab button
     const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
-    activeBtn.classList.remove('border-transparent', 'text-gray-500');
-    activeBtn.classList.add('border-indigo-500', 'text-indigo-600', 'bg-white');
+    let gradientFrom, gradientTo, shadowColor;
+
+    switch(tabName) {
+        case 'hero':
+            gradientFrom = 'from-emerald-500'; gradientTo = 'to-teal-600'; shadowColor = 'shadow-emerald-500/25'; break;
+        case 'group':
+            gradientFrom = 'from-slate-600'; gradientTo = 'to-slate-700'; shadowColor = 'shadow-slate-500/25'; break;
+        case 'scene':
+            gradientFrom = 'from-indigo-500'; gradientTo = 'to-violet-600'; shadowColor = 'shadow-indigo-500/25'; break;
+        case 'cover':
+            gradientFrom = 'from-violet-500'; gradientTo = 'to-purple-600'; shadowColor = 'shadow-violet-500/25'; break;
+    }
+
+    activeBtn.className = `tab-btn group relative overflow-hidden rounded-xl p-4 text-left transition-all duration-200 bg-gradient-to-br ${gradientFrom} ${gradientTo} text-white shadow-lg ${shadowColor} ring-2 ring-white/20`;
+
+    const icon = activeBtn.querySelector('span.text-3xl');
+    const title = activeBtn.querySelector('.font-semibold');
+    const subtitle = activeBtn.querySelector('.text-xs');
+    if (icon) icon.className = 'text-3xl';
+    if (title) title.className = 'font-semibold text-lg text-white';
+    if (subtitle) subtitle.className = 'text-xs opacity-80';
 }
 
 async function setStyle(styleId) {
@@ -282,94 +421,78 @@ function showStatus(show, message = '') {
     }
 }
 
-// Validate URL - check for common problematic URLs
 function validateImageUrl(url) {
     if (!url) {
-        return { valid: false, error: 'Reference image URL is required' };
+        return { valid: false, error: 'Reference image is required. Drag a local file or paste a URL.' };
     }
-
-    // Check for Google Drive links
+    // Allow base64 data URLs
+    if (url.startsWith('data:image/')) {
+        return { valid: true };
+    }
     if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
-        return {
-            valid: false,
-            error: 'Google Drive links are not supported. Please upload your image to Imgur, Cloudinary, or another image host that provides direct URLs ending in .jpg, .png, etc.'
-        };
+        return { valid: false, error: 'Google Drive links are not supported. Please upload your image to Imgur, Cloudinary, or drag a local file.' };
     }
-
-    // Check for Dropbox links
     if (url.includes('dropbox.com')) {
-        return {
-            valid: false,
-            error: 'Dropbox links are not directly supported. Try changing "dl=0" to "dl=1" in the URL, or use a different image host.'
-        };
+        return { valid: false, error: 'Dropbox links are not directly supported. Try changing "dl=0" to "dl=1" in the URL, or drag a local file instead.' };
     }
-
-    // Check for OneDrive links
     if (url.includes('onedrive.live.com') || url.includes('1drv.ms')) {
-        return {
-            valid: false,
-            error: 'OneDrive links are not supported. Please upload your image to Imgur, Cloudinary, or another image host.'
-        };
+        return { valid: false, error: 'OneDrive links are not supported. Please drag a local file or use Imgur/Cloudinary.' };
     }
-
     return { valid: true };
 }
 
 function showResult(success, data) {
     const container = document.getElementById('result-container');
     const content = document.getElementById('result-content');
-
     container.classList.remove('hidden');
-
-    // Scroll to result
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     if (success) {
-        // Use image_url if available (serverless), otherwise use local path
         const imageSource = data.image_url || `/images/${data.output_path}`;
         const pathInfo = data.output_path
-            ? `Image saved to: <code class="bg-emerald-100 px-2 py-0.5 rounded text-xs">${data.output_path}</code>`
-            : `Image generated successfully (serverless mode)`;
+            ? `Saved to: <code class="bg-emerald-100 dark:bg-emerald-800 px-2 py-0.5 rounded text-xs font-mono">${data.output_path}</code>`
+            : `Generated successfully`;
 
         content.innerHTML = `
-            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-5 rounded-lg mb-6">
-                <div class="flex items-start">
-                    <span class="text-2xl mr-3">✓</span>
+            <div class="bg-emerald-50 dark:bg-emerald-900/30 border-2 border-emerald-200 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 p-5 rounded-xl mb-6">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-800 flex items-center justify-center mr-4">
+                        <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
                     <div>
-                        <p class="font-semibold text-lg">Success!</p>
-                        <p class="text-sm mt-1">${pathInfo}</p>
-                        <p class="text-sm">Cost: $${data.cost.toFixed(2)}</p>
+                        <p class="font-bold text-lg">Success!</p>
+                        <p class="text-sm">${pathInfo} · Cost: $${data.cost.toFixed(2)}</p>
                     </div>
                 </div>
             </div>
             <div class="text-center">
-                <img src="${imageSource}" alt="Generated image" class="max-w-full h-auto rounded-lg shadow-lg mx-auto border border-gray-200" style="max-height: 600px;">
+                <img src="${imageSource}" alt="Generated image" class="max-w-full h-auto rounded-xl shadow-lg mx-auto border border-gray-200 dark:border-gray-600" style="max-height: 500px;">
                 <div class="mt-4">
-                    <a href="${imageSource}" download class="inline-flex items-center px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition text-sm">
-                        <span class="mr-2">⬇</span> Download Image
+                    <a href="${imageSource}" download class="inline-flex items-center gap-2 px-6 py-3 bg-gray-800 dark:bg-gray-700 hover:bg-gray-900 dark:hover:bg-gray-600 text-white rounded-xl transition font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Download Image
                     </a>
                 </div>
             </div>
         `;
     } else {
-        // Parse and format the error message
         let errorMsg = data.error || 'Unknown error occurred';
         let errorTip = '';
-
         if (errorMsg.includes('image_load_error') || errorMsg.includes('Failed to load the image')) {
             errorTip = 'The image URL could not be accessed. Make sure you\'re using a direct image URL (ending in .jpg, .png, etc.) from a public host like Imgur or Cloudinary.';
         } else if (errorMsg.includes('field required') || errorMsg.includes('image_url')) {
             errorTip = 'A reference image URL is required. Flux Kontext is an image-to-image model and needs a source image to work with.';
         }
-
         content.innerHTML = `
-            <div class="bg-red-50 border border-red-200 text-red-800 p-5 rounded-lg">
+            <div class="bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 text-red-800 dark:text-red-200 p-5 rounded-xl">
                 <div class="flex items-start">
-                    <span class="text-2xl mr-3">✕</span>
+                    <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-800 flex items-center justify-center mr-4 flex-shrink-0">
+                        <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </div>
                     <div>
-                        <p class="font-semibold text-lg">Generation Failed</p>
-                        <p class="text-sm mt-2">${errorMsg}</p>
-                        ${errorTip ? `<p class="text-sm mt-3 text-red-600 bg-red-100 p-3 rounded"><strong>Tip:</strong> ${errorTip}</p>` : ''}
+                        <p class="font-bold text-lg">Generation Failed</p>
+                        <p class="text-sm mt-1">${errorMsg}</p>
+                        ${errorTip ? `<p class="text-sm mt-3 text-red-600 dark:text-red-300 bg-red-100 dark:bg-red-800/50 p-3 rounded-lg"><strong>Tip:</strong> ${errorTip}</p>` : ''}
                     </div>
                 </div>
             </div>
@@ -382,138 +505,71 @@ document.getElementById('hero-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const refImage = formData.get('reference_image');
-
-    // Validate URL before submitting
     const validation = validateImageUrl(refImage);
-    if (!validation.valid) {
-        showResult(false, { error: validation.error });
-        return;
-    }
+    if (!validation.valid) { showResult(false, { error: validation.error }); return; }
 
-    const data = {
-        character_id: formData.get('character_id'),
-        location_id: formData.get('location_id') || null,
-        reference_image: refImage
-    };
-
+    const data = { character_id: formData.get('character_id'), location_id: formData.get('location_id') || null, reference_image: refImage };
     showStatus(true, 'Generating hero shot...');
     try {
-        const response = await fetch('/api/generate/hero', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        });
+        const response = await fetch('/api/generate/hero', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
         showStatus(false);
         const result = await response.json();
         showResult(result.success, result);
-    } catch (err) {
-        showStatus(false);
-        showResult(false, { error: 'Network error: ' + err.message });
-    }
+    } catch (err) { showStatus(false); showResult(false, { error: 'Network error: ' + err.message }); }
 });
 
 document.getElementById('group-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const refImage = formData.get('reference_image');
-
-    // Validate URL before submitting
     const validation = validateImageUrl(refImage);
-    if (!validation.valid) {
-        showResult(false, { error: validation.error });
-        return;
-    }
+    if (!validation.valid) { showResult(false, { error: validation.error }); return; }
 
-    const data = {
-        character_ids: Array.from(e.target.querySelector('[name="character_ids"]').selectedOptions).map(o => o.value),
-        location_id: formData.get('location_id') || null,
-        reference_image: refImage
-    };
-
+    const data = { character_ids: Array.from(e.target.querySelector('[name="character_ids"]').selectedOptions).map(o => o.value), location_id: formData.get('location_id') || null, reference_image: refImage };
     showStatus(true, 'Generating group shot...');
     try {
-        const response = await fetch('/api/generate/group', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        });
+        const response = await fetch('/api/generate/group', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
         showStatus(false);
         const result = await response.json();
         showResult(result.success, result);
-    } catch (err) {
-        showStatus(false);
-        showResult(false, { error: 'Network error: ' + err.message });
-    }
+    } catch (err) { showStatus(false); showResult(false, { error: 'Network error: ' + err.message }); }
 });
 
 document.getElementById('scene-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const refImage = formData.get('reference_image');
-
-    // Validate URL before submitting
     const validation = validateImageUrl(refImage);
-    if (!validation.valid) {
-        showResult(false, { error: validation.error });
-        return;
-    }
+    if (!validation.valid) { showResult(false, { error: validation.error }); return; }
 
-    const data = {
-        prompt: formData.get('prompt'),
-        character_ids: Array.from(e.target.querySelector('[name="character_ids"]').selectedOptions).map(o => o.value),
-        location_id: formData.get('location_id') || null,
-        reference_image: refImage
-    };
-
+    const data = { prompt: formData.get('prompt'), character_ids: Array.from(e.target.querySelector('[name="character_ids"]').selectedOptions).map(o => o.value), location_id: formData.get('location_id') || null, reference_image: refImage };
     showStatus(true, 'Generating scene...');
     try {
-        const response = await fetch('/api/generate/scene', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        });
+        const response = await fetch('/api/generate/scene', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
         showStatus(false);
         const result = await response.json();
         showResult(result.success, result);
-    } catch (err) {
-        showStatus(false);
-        showResult(false, { error: 'Network error: ' + err.message });
-    }
+    } catch (err) { showStatus(false); showResult(false, { error: 'Network error: ' + err.message }); }
 });
 
 document.getElementById('cover-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const refImage = formData.get('reference_image');
-
-    // Validate URL before submitting
     const validation = validateImageUrl(refImage);
-    if (!validation.valid) {
-        showResult(false, { error: validation.error });
-        return;
-    }
+    if (!validation.valid) { showResult(false, { error: validation.error }); return; }
 
-    const data = {
-        book_id: formData.get('book_id'),
-        reference_image: refImage
-    };
-
+    const data = { book_id: formData.get('book_id'), reference_image: refImage };
     showStatus(true, 'Generating cover...');
     try {
-        const response = await fetch('/api/generate/cover', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        });
+        const response = await fetch('/api/generate/cover', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
         showStatus(false);
         const result = await response.json();
         showResult(result.success, result);
-    } catch (err) {
-        showStatus(false);
-        showResult(false, { error: 'Network error: ' + err.message });
-    }
+    } catch (err) { showStatus(false); showResult(false, { error: 'Network error: ' + err.message }); }
 });
 
+// URL params handling
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('character')) {
     document.querySelector('#hero-form [name="character_id"]').value = urlParams.get('character');
@@ -522,5 +578,75 @@ if (urlParams.get('book')) {
     showTab('cover');
     document.querySelector('#cover-form [name="book_id"]').value = urlParams.get('book');
 }
+
+// Drag-and-drop and file upload handling
+document.querySelectorAll('.ref-image-zone').forEach(zone => {
+    const dropZone = zone.querySelector('.drop-zone');
+    const fileInput = zone.querySelector('.file-input');
+    const urlInput = zone.querySelector('.url-input');
+    const hiddenInput = zone.querySelector('input[name="reference_image"]');
+    const previewContainer = zone.querySelector('.preview-container');
+    const previewImage = zone.querySelector('.preview-image');
+    const clearBtn = zone.querySelector('.clear-preview');
+
+    // Handle URL input
+    urlInput.addEventListener('input', (e) => {
+        hiddenInput.value = e.target.value;
+        if (e.target.value && !e.target.value.startsWith('data:')) {
+            previewContainer.classList.add('hidden');
+        }
+    });
+
+    // Handle file selection
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) processFile(file);
+    });
+
+    // Drag events
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            processFile(file);
+        }
+    });
+
+    // Clear button
+    clearBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hiddenInput.value = '';
+        urlInput.value = '';
+        previewContainer.classList.add('hidden');
+        fileInput.value = '';
+    });
+
+    function processFile(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64 = e.target.result;
+            hiddenInput.value = base64;
+            urlInput.value = file.name;
+            previewImage.src = base64;
+            previewContainer.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+});
 </script>
 {% endblock %}

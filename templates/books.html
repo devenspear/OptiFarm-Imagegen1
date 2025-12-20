@@ -6,8 +6,8 @@
 <div class="space-y-6">
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">Books</h1>
-            <p class="text-gray-600">{{ books|length }} books in the Optimist Farm series</p>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Books</h1>
+            <p class="text-gray-600 dark:text-gray-400">{{ books|length }} books in the Optimist Farm series</p>
         </div>
         <a href="/generate" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
             Generate Book Pages →
@@ -17,7 +17,7 @@
     <!-- Books Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {% for book in books %}
-        <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover transition">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden card-hover transition">
             <div class="flex">
                 <!-- Book Cover Side -->
                 <div class="w-32 bg-gradient-to-br from-{{ ['farm-green', 'farm-blue', 'farm-orange', 'farm-purple', 'farm-pink', 'farm-yellow'][book.book_number % 6] }} to-{{ ['farm-blue', 'farm-purple', 'farm-pink', 'farm-yellow', 'farm-green', 'farm-orange'][book.book_number % 6] }} flex items-center justify-center">
@@ -30,55 +30,55 @@
                 <!-- Book Details -->
                 <div class="flex-1 p-6">
                     <div class="flex items-start justify-between mb-2">
-                        <h3 class="font-bold text-gray-800 text-lg">{{ book.title }}</h3>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-lg">{{ book.title }}</h3>
                         <span class="virtue-badge text-white text-xs px-2 py-1 rounded capitalize">{{ book.virtue }}</span>
                     </div>
 
                     <div class="space-y-2 text-sm">
                         <div class="flex items-center">
-                            <span class="text-gray-500 w-24">Featured:</span>
-                            <span class="font-medium text-gray-800">{{ book.featured_name }}</span>
+                            <span class="text-gray-500 dark:text-gray-400 w-24">Featured:</span>
+                            <span class="font-medium text-gray-800 dark:text-gray-200">{{ book.featured_name }}</span>
                         </div>
                         <div class="flex items-center">
-                            <span class="text-gray-500 w-24">Location:</span>
-                            <span class="text-gray-700 capitalize">{{ book.primary_location | replace('_', ' ') }}</span>
+                            <span class="text-gray-500 dark:text-gray-400 w-24">Location:</span>
+                            <span class="text-gray-700 dark:text-gray-300 capitalize">{{ book.primary_location | replace('_', ' ') }}</span>
                         </div>
                         <div class="flex items-center">
-                            <span class="text-gray-500 w-24">Mantra:</span>
-                            <span class="text-gray-700 italic">"{{ book.mantra }}"</span>
+                            <span class="text-gray-500 dark:text-gray-400 w-24">Mantra:</span>
+                            <span class="text-gray-700 dark:text-gray-300 italic">"{{ book.mantra }}"</span>
                         </div>
                     </div>
 
                     <!-- Supporting Characters -->
                     <div class="mt-3">
-                        <span class="text-gray-500 text-xs">Supporting: </span>
-                        <span class="text-gray-600 text-xs">
+                        <span class="text-gray-500 dark:text-gray-400 text-xs">Supporting: </span>
+                        <span class="text-gray-600 dark:text-gray-400 text-xs">
                             {{ book.supporting_characters | join(', ') | replace('_', ' ') | title }}
                         </span>
                     </div>
 
                     <!-- Micro Ritual -->
                     {% if book.micro_ritual %}
-                    <div class="mt-3 p-2 bg-green-50 rounded text-xs">
-                        <span class="font-medium text-green-700">Little Sprouts:</span>
-                        <span class="text-green-600">{{ book.micro_ritual.description }}</span>
+                    <div class="mt-3 p-2 bg-green-50 dark:bg-green-900/30 rounded text-xs">
+                        <span class="font-medium text-green-700 dark:text-green-400">Little Sprouts:</span>
+                        <span class="text-green-600 dark:text-green-300">{{ book.micro_ritual.description }}</span>
                     </div>
                     {% endif %}
 
                     <!-- Actions -->
-                    <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
-                        <div class="text-xs text-gray-500">
+                    <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
                             {% if book.scenes_count > 0 %}
-                            <span class="text-green-600">{{ book.scenes_count }} scenes defined</span>
+                            <span class="text-green-600 dark:text-green-400">{{ book.scenes_count }} scenes defined</span>
                             {% else %}
-                            <span class="text-yellow-600">No scenes yet</span>
+                            <span class="text-yellow-600 dark:text-yellow-400">No scenes yet</span>
                             {% endif %}
                         </div>
                         <div class="flex gap-2">
-                            <a href="/generate?book={{ book.id }}&type=cover" class="text-purple-500 hover:text-purple-700 text-sm font-medium">
+                            <a href="/generate?book={{ book.id }}&type=cover" class="text-purple-500 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 text-sm font-medium">
                                 Cover
                             </a>
-                            <a href="/generate?book={{ book.id }}" class="text-blue-500 hover:text-blue-700 text-sm font-medium">
+                            <a href="/generate?book={{ book.id }}" class="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
                                 Generate →
                             </a>
                         </div>
@@ -90,8 +90,8 @@
     </div>
 
     <!-- Virtues Summary -->
-    <div class="bg-white rounded-xl shadow-md p-6">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Virtues Framework</h2>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Virtues Framework</h2>
         <div class="flex flex-wrap gap-2">
             {% set virtues = ['courage', 'empathy', 'self-control', 'friendship', 'helpfulness', 'teamwork', 'forgiveness', 'optimism', 'fairness', 'trust', 'compassion'] %}
             {% for virtue in virtues %}

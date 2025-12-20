@@ -6,8 +6,8 @@
 <div class="space-y-6">
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">Gallery</h1>
-            <p class="text-gray-600">{{ images|length }} generated images</p>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Gallery</h1>
+            <p class="text-gray-600 dark:text-gray-400">{{ images|length }} generated images</p>
         </div>
         <a href="/generate" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
             Generate More →
@@ -17,27 +17,27 @@
     {% if images %}
     <!-- Filter -->
     <div class="flex gap-2">
-        <button onclick="filterGallery('all')" class="gallery-filter active px-4 py-2 bg-gray-800 text-white rounded-full text-sm" data-filter="all">All</button>
-        <button onclick="filterGallery('characters')" class="gallery-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300" data-filter="characters">Characters</button>
-        <button onclick="filterGallery('groups')" class="gallery-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300" data-filter="groups">Groups</button>
-        <button onclick="filterGallery('books')" class="gallery-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300" data-filter="books">Books</button>
-        <button onclick="filterGallery('covers')" class="gallery-filter px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300" data-filter="covers">Covers</button>
+        <button onclick="filterGallery('all')" class="gallery-filter active px-4 py-2 bg-gray-800 dark:bg-gray-100 text-white dark:text-gray-800 rounded-full text-sm" data-filter="all">All</button>
+        <button onclick="filterGallery('characters')" class="gallery-filter px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600" data-filter="characters">Characters</button>
+        <button onclick="filterGallery('groups')" class="gallery-filter px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600" data-filter="groups">Groups</button>
+        <button onclick="filterGallery('books')" class="gallery-filter px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600" data-filter="books">Books</button>
+        <button onclick="filterGallery('covers')" class="gallery-filter px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600" data-filter="covers">Covers</button>
     </div>
 
     <!-- Gallery Grid -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="gallery-grid">
         {% for img in images %}
-        <div class="gallery-item bg-white rounded-xl shadow-md overflow-hidden card-hover transition cursor-pointer" data-type="{{ img.type }}" onclick="openModal('{{ img.url }}', '{{ img.filename }}', '{{ img.prompt | e }}')">
-            <div class="aspect-square bg-gray-100 relative">
+        <div class="gallery-item bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden card-hover transition cursor-pointer" data-type="{{ img.type }}" onclick="openModal('{{ img.url }}', '{{ img.filename }}', '{{ img.prompt | e }}')">
+            <div class="aspect-square bg-gray-100 dark:bg-gray-700 relative">
                 <img src="{{ img.url }}" alt="{{ img.filename }}" class="w-full h-full object-cover">
                 <div class="absolute top-2 right-2">
                     <span class="text-xs font-medium px-2 py-1 rounded-full bg-black/50 text-white capitalize">{{ img.type }}</span>
                 </div>
             </div>
             <div class="p-3">
-                <p class="text-sm font-medium text-gray-800 truncate">{{ img.filename }}</p>
+                <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{{ img.filename }}</p>
                 {% if img.prompt %}
-                <p class="text-xs text-gray-500 truncate">{{ img.prompt[:50] }}...</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ img.prompt[:50] }}...</p>
                 {% endif %}
             </div>
         </div>
@@ -45,10 +45,10 @@
     </div>
     {% else %}
     <!-- Empty State -->
-    <div class="bg-white rounded-xl shadow-md p-12 text-center">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-12 text-center">
         <div class="text-6xl mb-4">🖼️</div>
-        <h2 class="text-xl font-bold text-gray-800 mb-2">No Images Yet</h2>
-        <p class="text-gray-500 mb-6">Generate your first image to see it here</p>
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">No Images Yet</h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">Generate your first image to see it here</p>
         <a href="/generate" class="inline-block bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition">
             Start Generating
         </a>
@@ -58,14 +58,14 @@
 
 <!-- Modal -->
 <div id="image-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden" onclick="closeModal(event)">
-    <div class="max-w-4xl max-h-[90vh] bg-white rounded-xl overflow-hidden" onclick="event.stopPropagation()">
+    <div class="max-w-4xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-xl overflow-hidden" onclick="event.stopPropagation()">
         <div class="relative">
             <img id="modal-image" src="" alt="" class="max-w-full max-h-[70vh] object-contain">
             <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 bg-black/50 text-white rounded-full hover:bg-black/70 transition">×</button>
         </div>
         <div class="p-4">
-            <h3 id="modal-filename" class="font-bold text-gray-800"></h3>
-            <p id="modal-prompt" class="text-sm text-gray-500 mt-2"></p>
+            <h3 id="modal-filename" class="font-bold text-gray-800 dark:text-gray-100"></h3>
+            <p id="modal-prompt" class="text-sm text-gray-500 dark:text-gray-400 mt-2"></p>
         </div>
     </div>
 </div>
@@ -76,12 +76,12 @@ function filterGallery(type) {
     const buttons = document.querySelectorAll('.gallery-filter');
 
     buttons.forEach(btn => {
-        btn.classList.remove('active', 'bg-gray-800', 'text-white');
-        btn.classList.add('bg-gray-200', 'text-gray-700');
+        btn.classList.remove('active', 'bg-gray-800', 'dark:bg-gray-100', 'text-white', 'dark:text-gray-800');
+        btn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
     });
 
-    event.target.classList.remove('bg-gray-200', 'text-gray-700');
-    event.target.classList.add('active', 'bg-gray-800', 'text-white');
+    event.target.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+    event.target.classList.add('active', 'bg-gray-800', 'dark:bg-gray-100', 'text-white', 'dark:text-gray-800');
 
     items.forEach(item => {
         if (type === 'all' || item.dataset.type === type) {
